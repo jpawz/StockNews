@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/stock_group"
+        android:title="@string/my_stocks_title">
+        <menu>
+
+        </menu>
+    </item>
+
+    <item android:title="@string/settings_group">
+        <menu>
+            <item
+                android:id="@+id/settings"
+                android:title="@string/settings"/>
+            <item
+                android:id="@+id/manage_news"
+                android:title="@string/manage_news"/>
+        </menu>
+    </item>
+
+</menu>

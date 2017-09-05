@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">StockNews</string>
+
+    <string name="settings_group">Settings:</string>
+    <string name="settings">Settings</string>
+    <string name="manage_news">Manage News</string>
+    <string name="symbol">symbol</string>
+    <string name="add_symbol">Add</string>
+    <string name="my_stocks_title">My stocks:</string>
+</resources>
