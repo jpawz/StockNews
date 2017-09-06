@@ -1,6 +1,8 @@
 package pl.pjask.stocknews;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -18,8 +20,9 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "stocknews";
-
+    private SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener;
     private DrawerLayout mDrawer;
+    private SharedPreferences mPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,8 +34,16 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        registerPreferenceListener();
+
         prepareNavigationDrawer();
 
+        prepareRootLayout();
+    }
+
+    private void prepareRootLayout() {
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.root_layout);
 
@@ -42,6 +53,20 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.root_layout, fragment)
                     .commit();
         }
+    }
+
+    private void registerPreferenceListener() {
+        mPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                Log.i(TAG, "preference key changed: " + key);
+                if (key.equals(MenuPreferences.PREF_MENU_ITEMS)) {
+                    prepareNavigationDrawer();
+                }
+            }
+        };
+
+        mPreferences.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
     }
 
     @Override
@@ -62,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         MenuItem stockGroupItem = navigationView.getMenu().getItem(0);
         SubMenu subMenu = stockGroupItem.getSubMenu();
+        subMenu.clear();
 
         if (menuItems != null) {
             Log.i("stocknews", menuItems.toString());

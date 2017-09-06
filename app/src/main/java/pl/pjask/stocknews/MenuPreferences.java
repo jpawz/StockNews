@@ -2,6 +2,7 @@ package pl.pjask.stocknews;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import java.util.Collections;
 import java.util.Set;
@@ -10,8 +11,7 @@ import java.util.TreeSet;
 public class MenuPreferences {
     private static final MenuPreferences instance = new MenuPreferences();
 
-    private static final String PREFS_NAME = "stocknews";
-    private static final String PREF_MENU_ITEMS = "menuItem";
+    public static final String PREF_MENU_ITEMS = "menuItem";
     private static SharedPreferences settings;
     private Set<String> storedMenuItems;
 
@@ -19,7 +19,7 @@ public class MenuPreferences {
     }
 
     public static MenuPreferences newInstance(Context context) {
-        settings = context.getSharedPreferences(PREFS_NAME, 0);
+        settings = PreferenceManager.getDefaultSharedPreferences(context);
 
         return instance;
     }
