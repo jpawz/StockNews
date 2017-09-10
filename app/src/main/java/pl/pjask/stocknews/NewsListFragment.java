@@ -14,12 +14,11 @@ import android.view.ViewGroup;
 import java.io.IOException;
 import java.util.List;
 
-import pl.pjask.stocknews.NewsProviders.BankierNewsProvider;
+import pl.pjask.stocknews.Utils.BankierParser;
 
 public class NewsListFragment extends Fragment {
     private static final String TAG = "NewsListFragment";
 
-    private static final String BANKIER_URL_TEMPLATE = "http://www.bankier.pl/inwestowanie/profile/quote.html?symbol=";
     private RecyclerView mRecyclerView;
     private List<NewsModel> mNewsModels;
 
@@ -49,13 +48,13 @@ public class NewsListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         if (stockSymbol != null) {
-            new FetchNewsTask(mRecyclerView).execute(BANKIER_URL_TEMPLATE + stockSymbol);
+            new FetchNewsTask(mRecyclerView).execute(stockSymbol);
         }
     }
 
     private class FetchNewsTask extends AsyncTask<String, Void, Boolean> {
         final RecyclerView mRecyclerView;
-        private BankierNewsProvider mBankierNewsProvider;
+        private BankierParser mBankierParser;
 
         public FetchNewsTask(RecyclerView recyclerView) {
             this.mRecyclerView = recyclerView;
@@ -63,9 +62,9 @@ public class NewsListFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(String... urls) {
-            mBankierNewsProvider = new BankierNewsProvider();
+            mBankierParser = new BankierParser();
             try {
-                mNewsModels = mBankierNewsProvider.getNews(urls[0]);
+                mNewsModels = mBankierParser.getNews(urls[0]);
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());
                 return false;

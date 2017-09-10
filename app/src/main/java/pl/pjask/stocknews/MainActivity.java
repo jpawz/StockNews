@@ -22,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "stocknews";
     private SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener;
     private DrawerLayout mDrawer;
-    private SharedPreferences mPreferences;
+    private SharedPreferences mSharedPreferences;
+    private Preferences mPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,7 +35,10 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mPreferences = Preferences.newInstance(this);
+        mPreferences.updateSymbolList();
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         registerPreferenceListener();
 
@@ -60,13 +64,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 Log.i(TAG, "preference key changed: " + key);
-                if (key.equals(MenuPreferences.PREF_MENU_ITEMS)) {
+                if (key.equals(Preferences.PREF_MENU_ITEMS)) {
                     prepareNavigationDrawer();
                 }
             }
         };
 
-        mPreferences.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
+        mSharedPreferences.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
     }
 
     @Override
@@ -82,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         setupDrawerContent(navigationView);
 
-        MenuPreferences menuPreferences = MenuPreferences.newInstance(this);
-        Set<String> menuItems = menuPreferences.getMenuItems();
+        Preferences preferences = Preferences.newInstance(this);
+        Set<String> menuItems = preferences.getMenuItems();
 
         MenuItem stockGroupItem = navigationView.getMenu().getItem(0);
         SubMenu subMenu = stockGroupItem.getSubMenu();
