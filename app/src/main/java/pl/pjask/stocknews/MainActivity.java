@@ -20,10 +20,8 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "stocknews";
-    private SharedPreferences.OnSharedPreferenceChangeListener mPreferenceChangeListener;
     private DrawerLayout mDrawer;
     private SharedPreferences mSharedPreferences;
-    private Preferences mPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        mPreferences = Preferences.newInstance(this);
-        mPreferences.updateSymbolList();
+        Preferences preferences = Preferences.newInstance(this);
+        preferences.updateSymbolList();
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -60,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void registerPreferenceListener() {
-        mPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 Log.i(TAG, "preference key changed: " + key);
@@ -70,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        mSharedPreferences.registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
+        mSharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
     }
 
     @Override
@@ -94,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         subMenu.clear();
 
         if (menuItems != null) {
-            Log.i("stocknews", menuItems.toString());
             for (String item : menuItems) {
                 subMenu.add(item);
             }
@@ -119,11 +116,9 @@ public class MainActivity extends AppCompatActivity {
         Class fragmentClass;
         switch (item.getItemId()) {
             case R.id.manage_news:
-                Log.i(TAG, "manage news");
-                fragmentClass = AddStockFragment.class;
+                fragmentClass = ManageStocksFragment.class;
                 break;
             default:
-                Log.i(TAG, "default");
                 fragmentClass = NewsListFragment.class;
         }
 
