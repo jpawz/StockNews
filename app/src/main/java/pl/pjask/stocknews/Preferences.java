@@ -30,12 +30,22 @@ public class Preferences {
         return instance;
     }
 
+    /**
+     * Returns Stock symbols used for creating menu.
+     *
+     * @return Stock symbols as a Set of Strings.
+     */
     public Set<String> getMenuItems() {
         storedMenuItems =
                 new TreeSet<>(settings.getStringSet(PREF_MENU_ITEMS, Collections.<String>emptySet()));
         return storedMenuItems;
     }
 
+    /**
+     * Adds stock symbol to menu.
+     *
+     * @param itemName name of stock symbol (last part of bankier url).
+     */
     public void addMenuItem(String itemName) {
         storedMenuItems.add(itemName);
 
@@ -44,10 +54,29 @@ public class Preferences {
                 .apply();
     }
 
+    /**
+     * Get all menu items.
+     *
+     * @return set of Strings with symbol names.
+     */
     public Set<String> getSymbols() {
         return new TreeSet<>(settings.getStringSet(PREF_SYMBOLS, Collections.<String>emptySet()));
     }
 
+    /**
+     * Replaces current menu with new symbols set.
+     *
+     * @param symbols set of Strings with symbol names.
+     */
+    public void setSymbols(Set<String> symbols) {
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putStringSet(PREF_MENU_ITEMS, symbols)
+                .apply();
+    }
+
+    /**
+     * Updates stored stock symbols with new ones (if website is accessible).
+     */
     public void updateSymbolList() {
         (new UpdateSymbolsTask()).execute();
     }

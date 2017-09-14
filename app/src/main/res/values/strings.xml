@@ -3,8 +3,9 @@
 
     <string name="settings_group">Settings:</string>
     <string name="settings">Settings</string>
-    <string name="manage_news">Manage News</string>
+    <string name="manage_news">Manage Symbols</string>
     <string name="symbol">symbol</string>
     <string name="add_symbol">Add</string>
     <string name="my_stocks_title">My stocks:</string>
+    <string name="remove_selected_stocks_title">Remove</string>
 </resources>
