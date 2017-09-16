@@ -13,18 +13,18 @@ import java.util.TreeSet;
 
 import pl.pjask.stocknews.Utils.BankierParser;
 
-public class Preferences {
+public class MenuPreferences {
     public static final String PREF_MENU_ITEMS = "menuItem";
     private static final String PREF_SYMBOLS = "symbols";
     private static final String TAG = "preferences";
-    private static final Preferences instance = new Preferences();
+    private static final MenuPreferences instance = new MenuPreferences();
     private static SharedPreferences settings;
     private Set<String> storedMenuItems;
 
-    private Preferences() {
+    private MenuPreferences() {
     }
 
-    public static Preferences newInstance(Context context) {
+    public static MenuPreferences newInstance(Context context) {
         settings = PreferenceManager.getDefaultSharedPreferences(context);
 
         return instance;
@@ -103,5 +103,6 @@ public class Preferences {
                         .apply();
             }
         }
+
     }
 }

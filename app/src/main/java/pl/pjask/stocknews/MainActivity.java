@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        Preferences preferences = Preferences.newInstance(this);
-        preferences.updateSymbolList();
+        MenuPreferences menuPreferences = MenuPreferences.newInstance(this);
+        menuPreferences.updateSymbolList();
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 Log.i(TAG, "preference key changed: " + key);
-                if (key.equals(Preferences.PREF_MENU_ITEMS)) {
+                if (key.equals(MenuPreferences.PREF_MENU_ITEMS)) {
                     prepareNavigationDrawer();
                 }
             }
@@ -84,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         setupDrawerContent(navigationView);
 
-        Preferences preferences = Preferences.newInstance(this);
-        Set<String> menuItems = preferences.getMenuItems();
+        MenuPreferences menuPreferences = MenuPreferences.newInstance(this);
+        Set<String> menuItems = menuPreferences.getMenuItems();
 
         MenuItem stockGroupItem = navigationView.getMenu().getItem(0);
         SubMenu subMenu = stockGroupItem.getSubMenu();
@@ -117,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.manage_news:
                 fragmentClass = ManageStocksFragment.class;
+                break;
+            case R.id.settings:
+                fragmentClass = SettingsFragment.class;
                 break;
             default:
                 fragmentClass = NewsListFragment.class;

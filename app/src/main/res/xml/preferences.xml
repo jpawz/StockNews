@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="update_symbols_button"
+        android:title="@string/symbols_update_title"
+        />
+
+</PreferenceScreen>

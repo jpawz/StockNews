@@ -16,14 +16,14 @@ import java.util.Set;
 
 public class AddStockFragment extends DialogFragment implements View.OnClickListener {
 
-    private Preferences mPreferences;
+    private MenuPreferences mMenuPreferences;
 
     private AutoCompleteTextView mTextView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mPreferences = Preferences.newInstance(getContext());
+        mMenuPreferences = MenuPreferences.newInstance(getContext());
 
         View view = inflater.inflate(R.layout.fragment_add_stock, container, false);
 
@@ -40,7 +40,7 @@ public class AddStockFragment extends DialogFragment implements View.OnClickList
         mTextView = (AutoCompleteTextView) view.findViewById(R.id.stock_symbol);
         mTextView.setThreshold(1);
 
-        Set<String> symbolsSet = mPreferences.getSymbols();
+        Set<String> symbolsSet = mMenuPreferences.getSymbols();
         String[] symbols = symbolsSet.toArray(new String[symbolsSet.size()]);
 
         ArrayAdapter<String> adapter =
@@ -54,7 +54,7 @@ public class AddStockFragment extends DialogFragment implements View.OnClickList
         if (stockSymbol.isEmpty()) {
             return;
         }
-        mPreferences.addMenuItem(stockSymbol);
+        mMenuPreferences.addMenuItem(stockSymbol);
         mTextView.setText("");
         Toast.makeText(getContext(), stockSymbol + " added!", Toast.LENGTH_SHORT)
                 .show();

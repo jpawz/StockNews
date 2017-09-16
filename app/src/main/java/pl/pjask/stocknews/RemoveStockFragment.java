@@ -21,7 +21,7 @@ public class RemoveStockFragment extends DialogFragment {
     private ListView listView;
     private List<String> items;
     private boolean[] itemsCheckStatus;
-    private Preferences mPreferences;
+    private MenuPreferences mMenuPreferences;
 
     private ArrayAdapter<String> itemsAdapter;
 
@@ -31,8 +31,8 @@ public class RemoveStockFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mPreferences = Preferences.newInstance(getContext());
-        Set<String> menuItems = mPreferences.getMenuItems();
+        mMenuPreferences = MenuPreferences.newInstance(getContext());
+        Set<String> menuItems = mMenuPreferences.getMenuItems();
         items = new ArrayList<>(menuItems);
         itemsCheckStatus = new boolean[items.size()];
 
@@ -66,7 +66,7 @@ public class RemoveStockFragment extends DialogFragment {
                     itemsCheckStatus = new boolean[items.size()];
                     items.removeAll(newItems);
                     itemsAdapter.notifyDataSetChanged();
-                    mPreferences.setSymbols(new TreeSet<>(items));
+                    mMenuPreferences.setSymbols(new TreeSet<>(items));
                     listView.clearChoices();
                 }
             }
