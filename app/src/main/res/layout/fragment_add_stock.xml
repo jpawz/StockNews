@@ -5,22 +5,42 @@
 
     <AutoCompleteTextView
         android:id="@+id/stock_symbol"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="25dp"
         android:ems="10"
         android:hint="@string/symbol"
         android:inputType="textPersonName"/>
 
+    <CheckBox
+        android:id="@+id/fetch_news"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stock_symbol"
+        android:checked="true"
+        android:text="@string/fetch_news"/>
+
+    <CheckBox
+        android:id="@+id/fetch_espi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fetch_news"
+        android:checked="true"
+        android:text="@string/fetch_espi"/>
+
+    <CheckBox
+        android:id="@+id/fetch_forum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fetch_espi"
+        android:text="@string/fetch_forum"/>
 
     <Button
         android:id="@+id/button_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/stock_symbol"
+        android:layout_below="@+id/fetch_forum"
         android:text="@string/add_symbol"/>
 </RelativeLayout>

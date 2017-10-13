@@ -1,8 +1,8 @@
-package pl.pjask.stocknews;
+package pl.pjask.stocknews.models;
 
 public class NewsModel {
 
-    private final String title;
+    private String title;
 
     public NewsModel(String title) {
         this.title = title;
@@ -10,5 +10,9 @@ public class NewsModel {
 
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

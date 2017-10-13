@@ -1,4 +1,4 @@
-package pl.pjask.stocknews.Utils;
+package pl.pjask.stocknews.utils;
 
 import org.junit.Before;
 import org.junit.Test;

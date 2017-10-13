@@ -14,7 +14,8 @@ import android.view.ViewGroup;
 import java.io.IOException;
 import java.util.List;
 
-import pl.pjask.stocknews.Utils.BankierParser;
+import pl.pjask.stocknews.models.NewsModel;
+import pl.pjask.stocknews.utils.BankierParser;
 
 public class NewsListFragment extends Fragment {
     private static final String TAG = "NewsListFragment";
@@ -30,7 +31,7 @@ public class NewsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_news_list, container, false);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.news_list_recycler_view);
+        mRecyclerView = rootView.findViewById(R.id.news_list_recycler_view);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);

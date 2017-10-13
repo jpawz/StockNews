@@ -1,4 +1,4 @@
-package pl.pjask.stocknews.Utils;
+package pl.pjask.stocknews.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import pl.pjask.stocknews.NewsModel;
+import pl.pjask.stocknews.models.NewsModel;
 
 
 /**

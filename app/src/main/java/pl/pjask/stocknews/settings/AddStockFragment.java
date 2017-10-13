@@ -1,4 +1,4 @@
-package pl.pjask.stocknews;
+package pl.pjask.stocknews.settings;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,11 +13,15 @@ import android.widget.Toast;
 
 import java.util.Set;
 
+import pl.pjask.stocknews.Menu;
+import pl.pjask.stocknews.MenuPreferences;
+import pl.pjask.stocknews.R;
+import pl.pjask.stocknews.models.Stock;
+
 
 public class AddStockFragment extends DialogFragment implements View.OnClickListener {
 
     private MenuPreferences mMenuPreferences;
-
     private AutoCompleteTextView mTextView;
 
     @Nullable
@@ -27,7 +31,7 @@ public class AddStockFragment extends DialogFragment implements View.OnClickList
 
         View view = inflater.inflate(R.layout.fragment_add_stock, container, false);
 
-        Button addButton = (Button) view.findViewById(R.id.button_add);
+        Button addButton = view.findViewById(R.id.button_add);
 
         prepareAutocompleteTextView(view);
 
@@ -37,7 +41,7 @@ public class AddStockFragment extends DialogFragment implements View.OnClickList
     }
 
     private void prepareAutocompleteTextView(View view) {
-        mTextView = (AutoCompleteTextView) view.findViewById(R.id.stock_symbol);
+        mTextView = view.findViewById(R.id.stock_symbol);
         mTextView.setThreshold(1);
 
         Set<String> symbolsSet = mMenuPreferences.getSymbols();
@@ -54,7 +58,12 @@ public class AddStockFragment extends DialogFragment implements View.OnClickList
         if (stockSymbol.isEmpty()) {
             return;
         }
-        mMenuPreferences.addMenuItem(stockSymbol);
+
+        Stock stock = new Stock(stockSymbol);
+
+        Menu menu = Menu.getInstance(getContext());
+        menu.addSymbol(stock);
+
         mTextView.setText("");
         Toast.makeText(getContext(), stockSymbol + " added!", Toast.LENGTH_SHORT)
                 .show();

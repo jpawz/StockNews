@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import pl.pjask.stocknews.models.NewsModel;
+
 public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHolder> {
 
     private final List<NewsModel> mNewsModels;

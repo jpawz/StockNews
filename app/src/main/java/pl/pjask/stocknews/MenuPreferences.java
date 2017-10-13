@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
-import pl.pjask.stocknews.Utils.BankierParser;
+import pl.pjask.stocknews.utils.BankierParser;
 
 public class MenuPreferences {
     public static final String PREF_MENU_ITEMS = "menuItem";

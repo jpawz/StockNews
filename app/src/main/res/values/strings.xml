@@ -9,4 +9,7 @@
     <string name="my_stocks_title">My stocks:</string>
     <string name="remove_selected_stocks_title">Remove</string>
     <string name="symbols_update_title">Update symbols</string>
+    <string name="fetch_news">Fetch news</string>
+    <string name="fetch_espi">Fetch espi</string>
+    <string name="fetch_forum">Fetch forum</string>
 </resources>

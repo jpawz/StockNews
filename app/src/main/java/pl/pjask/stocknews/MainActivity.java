@@ -1,8 +1,6 @@
 package pl.pjask.stocknews;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -18,10 +16,13 @@ import android.view.SubMenu;
 
 import java.util.Set;
 
+import pl.pjask.stocknews.settings.ManageStocksFragment;
+import pl.pjask.stocknews.settings.SettingsFragment;
+
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "stocknews";
+    private Menu menu;
     private DrawerLayout mDrawer;
-    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,13 +37,23 @@ public class MainActivity extends AppCompatActivity {
         MenuPreferences menuPreferences = MenuPreferences.newInstance(this);
         menuPreferences.updateSymbolList();
 
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        registerPreferenceListener();
+        menu = Menu.getInstance(this);
+        menu.setMenuChangeListener(new Menu.MenuChangeListener() {
+            @Override
+            public void onMenuChanged() {
+                prepareNavigationDrawer();
+            }
+        });
 
         prepareNavigationDrawer();
 
         prepareRootLayout();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        prepareNavigationDrawer();
     }
 
     private void prepareRootLayout() {
@@ -57,19 +68,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void registerPreferenceListener() {
-        SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                Log.i(TAG, "preference key changed: " + key);
-                if (key.equals(MenuPreferences.PREF_MENU_ITEMS)) {
-                    prepareNavigationDrawer();
-                }
-            }
-        };
-
-        mSharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
-    }
 
     @Override
     public void onBackPressed() {
@@ -84,8 +82,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         setupDrawerContent(navigationView);
 
-        MenuPreferences menuPreferences = MenuPreferences.newInstance(this);
-        Set<String> menuItems = menuPreferences.getMenuItems();
+        Set<String> menuItems = menu.getSymbolNames();
 
         MenuItem stockGroupItem = navigationView.getMenu().getItem(0);
         SubMenu subMenu = stockGroupItem.getSubMenu();
@@ -97,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(

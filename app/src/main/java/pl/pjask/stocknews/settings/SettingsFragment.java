@@ -1,8 +1,11 @@
-package pl.pjask.stocknews;
+package pl.pjask.stocknews.settings;
 
 import android.os.Bundle;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+
+import pl.pjask.stocknews.MenuPreferences;
+import pl.pjask.stocknews.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
@@ -20,7 +23,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     private void prepareUpdateSymbolsButton() {
-        Preference button = (Preference) getPreferenceManager().findPreference("update_symbols_button");
+        Preference button = getPreferenceManager().findPreference("update_symbols_button");
         if (button != null) {
             button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
