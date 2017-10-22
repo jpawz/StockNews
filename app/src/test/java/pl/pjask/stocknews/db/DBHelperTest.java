@@ -15,6 +15,7 @@ import org.robolectric.annotation.Config;
 import java.lang.reflect.Field;
 
 import pl.pjask.stocknews.BuildConfig;
+import pl.pjask.stocknews.db.DBSchema.SymbolHintTable;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static org.junit.Assert.assertEquals;
@@ -69,6 +70,17 @@ public class DBHelperTest {
 
         assertEquals("not all newsTable columns were created",
                 NewsTable.Cols.class.getFields().length, cursor.getColumnNames().length);
+
+    }
+
+    @Test
+    public void checkHintsCols() {
+        Cursor cursor = db.query(SymbolHintTable.NAME, null, null, null, null, null, null);
+        assertNotNull(cursor);
+
+
+        assertEquals("not all SymbolHintTable columns were created",
+                SymbolHintTable.Cols.class.getFields().length, cursor.getColumnNames().length);
 
     }
 }

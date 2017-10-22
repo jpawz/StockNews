@@ -20,4 +20,15 @@ public class DBSchema {
             public static final String TITLE = "title";
         }
     }
+
+
+    public static final class SymbolHintTable {
+        public static final String NAME = "hints";
+
+        public static final class Cols {
+            public static final String ID = "_id";
+            public static final String SYMBOL_NAME = "symbol";
+            public static final String FULL_NAME = "name";
+        }
+    }
 }

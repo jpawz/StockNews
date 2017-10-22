@@ -11,6 +11,7 @@ import static junit.framework.Assert.assertTrue;
 public class BankierParserTest {
 
     final String symbol = "KGHM";
+    final String fullName = "KGHM Polska Miedź SA";
 
     BankierParser mBankierParser;
 
@@ -33,6 +34,11 @@ public class BankierParserTest {
     @Test
     public void symbolsShouldContainKGHM() throws IOException {
         assertTrue(mBankierParser.getSymbols().contains(symbol));
+    }
+
+    @Test
+    public void checkFullNameOfSymbol() throws IOException {
+        assertTrue(mBankierParser.getStockMap().get(symbol).getStockFullName().equals(fullName));
     }
 
 }

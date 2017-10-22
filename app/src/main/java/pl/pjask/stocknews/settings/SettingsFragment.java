@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
-import pl.pjask.stocknews.MenuPreferences;
 import pl.pjask.stocknews.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
@@ -28,8 +27,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    MenuPreferences.newInstance(getContext()).
-                            updateSymbolList();
+                    Hints.getInstance(getContext())
+                            .updateSymbolList();
                     return true;
                 }
             });

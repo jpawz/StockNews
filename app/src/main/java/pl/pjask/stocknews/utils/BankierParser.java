@@ -8,11 +8,14 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import pl.pjask.stocknews.models.NewsModel;
+import pl.pjask.stocknews.models.Stock;
 
 
 /**
@@ -61,6 +64,23 @@ public class BankierParser {
         Set<String> symbols = new TreeSet<>();
         for (Element row : rows) {
             symbols.add(StringUtils.strip(row.getElementsByTag("a").text(), " "));
+        }
+
+        return symbols;
+    }
+
+    public Map<String, Stock> getStockMap() throws IOException {
+        Document document = Jsoup.connect(BANKIER_SYMBOLS_URL).get();
+
+        Elements rows = document.select("tbody").select(SYMBOL_ROW_CLASS);
+
+        Map<String, Stock> symbols = new HashMap<>();
+        for (Element row : rows) {
+            String symbol = StringUtils.strip(row.getElementsByTag("a").text(), " ");
+            Stock stock = new Stock(symbol);
+            stock.setStockFullName(row.getElementsByTag("a").attr("title"));
+
+            symbols.put(symbol, stock);
         }
 
         return symbols;

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import pl.pjask.stocknews.db.DBSchema.SymbolHintTable;
+
 import static pl.pjask.stocknews.db.DBSchema.MenuTable;
 import static pl.pjask.stocknews.db.DBSchema.NewsTable;
 
@@ -42,6 +44,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 NewsTable.Cols.SYMBOL + " TEXT," +
                 NewsTable.Cols.TITLE + " TEXT" +
                 ")");
+
+        db.execSQL("create table " + SymbolHintTable.NAME + "(" +
+                SymbolHintTable.Cols.ID + " INTEGER PRIMARY KEY," +
+                SymbolHintTable.Cols.SYMBOL_NAME + " TEXT," +
+                SymbolHintTable.Cols.FULL_NAME + " TEXT" +
+                ")"
+        );
     }
 
     @Override

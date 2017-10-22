@@ -16,6 +16,7 @@ import android.view.SubMenu;
 
 import java.util.Set;
 
+import pl.pjask.stocknews.settings.Hints;
 import pl.pjask.stocknews.settings.ManageStocksFragment;
 import pl.pjask.stocknews.settings.SettingsFragment;
 
@@ -34,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        MenuPreferences menuPreferences = MenuPreferences.newInstance(this);
-        menuPreferences.updateSymbolList();
+        Hints hints = Hints.getInstance(this);
+        hints.updateSymbolList();
 
         menu = Menu.getInstance(this);
         menu.setMenuChangeListener(new Menu.MenuChangeListener() {
