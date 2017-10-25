@@ -1,5 +1,7 @@
 package pl.pjask.stocknews;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,7 +23,6 @@ public class NewsListFragment extends Fragment {
     private static final String TAG = "NewsListFragment";
 
     private RecyclerView mRecyclerView;
-    private List<NewsModel> mNewsModels;
 
     private String stockSymbol;
 
@@ -56,6 +57,7 @@ public class NewsListFragment extends Fragment {
     private class FetchNewsTask extends AsyncTask<String, Void, Boolean> {
         final RecyclerView mRecyclerView;
         private BankierParser mBankierParser;
+        private List<NewsModel> mNewsModels;
 
         public FetchNewsTask(RecyclerView recyclerView) {
             this.mRecyclerView = recyclerView;
@@ -77,9 +79,14 @@ public class NewsListFragment extends Fragment {
         @Override
         protected void onPostExecute(Boolean success) {
             if (success) {
-                mRecyclerView.setAdapter(new NewsListAdapter(mNewsModels));
+                Context context = getContext();
+                Cursor cursor = NewsProvider.getInstance(context).queryNewsFor(stockSymbol);
+                mRecyclerView.setAdapter(new NewsListAdapter(context, cursor));
+
+                for (NewsModel model : mNewsModels) {
+                    NewsProvider.getInstance(getContext()).addNews(model);
+                }
             }
         }
     }
-
 }

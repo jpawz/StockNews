@@ -51,7 +51,7 @@ public class Menu {
         }
     }
 
-    public Set<Stock> getStocks() {
+    private Set<Stock> getStocks() {
         Set<Stock> menuSet = new TreeSet<>();
 
         StockCursorWrapper cursor = queryStocks();

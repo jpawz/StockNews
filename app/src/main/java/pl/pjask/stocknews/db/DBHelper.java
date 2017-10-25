@@ -42,7 +42,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 NewsTable.Cols.ID + " INTEGER PRIMARY KEY," +
                 NewsTable.Cols.MENU_ID + " INTEGER REFERENCES " + MenuTable.NAME + ", " +
                 NewsTable.Cols.SYMBOL + " TEXT," +
-                NewsTable.Cols.TITLE + " TEXT" +
+                NewsTable.Cols.TITLE + " TEXT NOT NULL UNIQUE," +
+                NewsTable.Cols.URL + " TEXT" +
                 ")");
 
         db.execSQL("create table " + SymbolHintTable.NAME + "(" +

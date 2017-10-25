@@ -5,6 +5,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 import pl.pjask.stocknews.R;
+import pl.pjask.stocknews.utils.Hints;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 

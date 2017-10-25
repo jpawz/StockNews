@@ -14,10 +14,11 @@ public class DBSchema {
         public static final String NAME = "news";
 
         public static final class Cols {
-            public static final String ID = "id";
+            public static final String ID = "_id";
             public static final String MENU_ID = "menu_id";
             public static final String SYMBOL = "symbol";
             public static final String TITLE = "title";
+            public static final String URL = "url";
         }
     }
 

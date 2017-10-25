@@ -16,6 +16,7 @@ import android.widget.Toast;
 import pl.pjask.stocknews.Menu;
 import pl.pjask.stocknews.R;
 import pl.pjask.stocknews.models.Stock;
+import pl.pjask.stocknews.utils.Hints;
 
 import static pl.pjask.stocknews.db.DBSchema.SymbolHintTable;
 

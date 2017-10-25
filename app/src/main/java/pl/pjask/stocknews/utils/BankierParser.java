@@ -43,8 +43,11 @@ public class BankierParser {
         Element newsElement = boxes.get(0);
         Elements newsElements = newsElement.getElementsByTag("li");
 
+        NewsModel news;
         for (Element element : newsElements) {
-            newsModels.add(new NewsModel(element.text()));
+            news = new NewsModel(element.text());
+            news.setStockSymbol(symbol);
+            newsModels.add(news);
         }
 
         return newsModels;
