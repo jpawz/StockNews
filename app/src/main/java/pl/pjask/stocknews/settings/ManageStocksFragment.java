@@ -25,8 +25,6 @@ public class ManageStocksFragment extends Fragment {
         tabHost.addTab(tabHost.newTabSpec("remove").setIndicator("remove"),
                 RemoveStockFragment.class, null);
 
-
         return tabHost;
-
     }
 }
