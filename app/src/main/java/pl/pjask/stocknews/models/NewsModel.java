@@ -2,7 +2,7 @@ package pl.pjask.stocknews.models;
 
 public class NewsModel {
 
-    private String title;
+    private final String title;
     private String stockSymbol;
 
     public NewsModel(String title) {

@@ -1,5 +1,6 @@
 package pl.pjask.stocknews;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,7 +17,6 @@ import android.view.SubMenu;
 
 import java.util.Set;
 
-import pl.pjask.stocknews.settings.ManageStocksFragment;
 import pl.pjask.stocknews.settings.SettingsFragment;
 import pl.pjask.stocknews.utils.Hints;
 
@@ -30,31 +30,45 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setUpToolbar();
 
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = findViewById(R.id.drawer_layout);
 
         Hints hints = Hints.getInstance(this);
         hints.updateSymbolList();
 
         menu = Menu.getInstance(this);
-        menu.setMenuChangeListener(new Menu.MenuChangeListener() {
-            @Override
-            public void onMenuChanged() {
-                prepareNavigationDrawer();
-            }
-        });
+        menu.setMenuChangeListener(this::prepareNavigationDrawer);
 
         prepareNavigationDrawer();
 
         prepareRootLayout();
     }
 
+    private void setUpToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         prepareNavigationDrawer();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawer.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.refresh:
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void prepareRootLayout() {
@@ -79,8 +93,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        getMenuInflater().inflate(R.menu.main_toolbar_menu, menu);
+        return true;
+    }
+
     private void prepareNavigationDrawer() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
         setupDrawerContent(navigationView);
 
         Set<String> menuItems = menu.getSymbolNames();
@@ -113,8 +133,9 @@ public class MainActivity extends AppCompatActivity {
         Class fragmentClass;
         switch (item.getItemId()) {
             case R.id.manage_news:
-                fragmentClass = ManageStocksFragment.class;
-                break;
+                Intent intent = new Intent(MainActivity.this, ManageActivity.class);
+                startActivity(intent);
+                return;
             case R.id.settings:
                 fragmentClass = SettingsFragment.class;
                 break;
@@ -137,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.root_layout, fragment)
-                .addToBackStack(null)
+//                .addToBackStack(null)
                 .commit();
 
         mDrawer.closeDrawers();

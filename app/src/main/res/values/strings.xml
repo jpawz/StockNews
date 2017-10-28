@@ -12,4 +12,7 @@
     <string name="fetch_news">Fetch news</string>
     <string name="fetch_espi">Fetch espi</string>
     <string name="fetch_forum">Fetch forum</string>
+    <string name="drawer_close">close</string>
+    <string name="drawer_open">open</string>
+    <string name="refresh">Refresh</string>
 </resources>
