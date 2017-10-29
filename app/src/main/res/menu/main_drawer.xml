@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/all_stocks"
+        android:title="@string/all_stocks">
+    </item>
+
+    <item
         android:id="@+id/stock_group"
         android:title="@string/my_stocks_title">
         <menu>

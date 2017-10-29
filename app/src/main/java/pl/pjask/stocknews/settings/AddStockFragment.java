@@ -57,12 +57,9 @@ public class AddStockFragment extends DialogFragment implements View.OnClickList
                 0
         );
 
-        symbolNameAdapter.setCursorToStringConverter(new SimpleCursorAdapter.CursorToStringConverter() {
-            @Override
-            public CharSequence convertToString(Cursor cursor) {
-                final int colIndex = cursor.getColumnIndex(SymbolHintTable.Cols.SYMBOL_NAME);
-                return cursor.getString(colIndex);
-            }
+        symbolNameAdapter.setCursorToStringConverter(cursor -> {
+            final int colIndex = cursor.getColumnIndex(SymbolHintTable.Cols.SYMBOL_NAME);
+            return cursor.getString(colIndex);
         });
 
         symbolNameAdapter.setFilterQueryProvider(new FilterQueryProvider() {

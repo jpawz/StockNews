@@ -2,7 +2,6 @@ package pl.pjask.stocknews;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -15,15 +14,16 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.SubMenu;
 
+import java.util.ArrayList;
 import java.util.Set;
 
-import pl.pjask.stocknews.settings.SettingsFragment;
 import pl.pjask.stocknews.utils.Hints;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "stocknews";
     private Menu menu;
     private DrawerLayout mDrawer;
+    private ArrayList<String> activeStockSymbols;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         menu = Menu.getInstance(this);
         menu.setMenuChangeListener(this::prepareNavigationDrawer);
+        setActiveStockSymbolsForAllSymbols();
 
         prepareNavigationDrawer();
 
@@ -65,7 +66,9 @@ public class MainActivity extends AppCompatActivity {
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
             case R.id.refresh:
-
+                for (String symbol : activeStockSymbols) {
+                    NewsProvider.getInstance(this).updateNews(symbol);
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
         Set<String> menuItems = menu.getSymbolNames();
 
-        MenuItem stockGroupItem = navigationView.getMenu().getItem(0);
+        MenuItem stockGroupItem = navigationView.getMenu().getItem(1);
         SubMenu subMenu = stockGroupItem.getSubMenu();
         subMenu.clear();
 
@@ -118,12 +121,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        selectDrawerItem(item);
-                        return true;
-                    }
+                item -> {
+                    selectDrawerItem(item);
+                    return true;
                 }
         );
     }
@@ -131,16 +131,26 @@ public class MainActivity extends AppCompatActivity {
     private void selectDrawerItem(MenuItem item) {
         Fragment fragment = null;
         Class fragmentClass;
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.manage_news:
-                Intent intent = new Intent(MainActivity.this, ManageActivity.class);
+                intent = new Intent(MainActivity.this, ManageActivity.class);
                 startActivity(intent);
+                mDrawer.closeDrawers();
                 return;
             case R.id.settings:
-                fragmentClass = SettingsFragment.class;
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                mDrawer.closeDrawers();
+                return;
+            case R.id.all_stocks:
+                fragmentClass = NewsListFragment.class;
+                setActiveStockSymbolsForAllSymbols();
                 break;
             default:
                 fragmentClass = NewsListFragment.class;
+                activeStockSymbols = new ArrayList<>();
+                activeStockSymbols.add(item.getTitle().toString());
         }
 
         try {
@@ -151,16 +161,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Bundle fragmentArgs = new Bundle();
-        fragmentArgs.putString("symbol", item.getTitle().toString());
+        fragmentArgs.putStringArrayList("symbols", activeStockSymbols);
 
         assert fragment != null;
         fragment.setArguments(fragmentArgs);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.root_layout, fragment)
-//                .addToBackStack(null)
                 .commit();
 
         mDrawer.closeDrawers();
+    }
+
+    private void setActiveStockSymbolsForAllSymbols() {
+        activeStockSymbols = new ArrayList<>();
+        Set<String> menuItems = menu.getSymbolNames();
+        activeStockSymbols.addAll(menuItems);
     }
 }

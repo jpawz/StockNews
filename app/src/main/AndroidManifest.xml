@@ -24,7 +24,10 @@
 
         <activity
             android:name=".ManageActivity"
-            android:label="@string/settings"></activity>
+            android:label="@string/manage_news"/>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/settings"/>
     </application>
 
 </manifest>

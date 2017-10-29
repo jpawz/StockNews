@@ -8,24 +8,22 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.IOException;
-import java.util.List;
-
-import pl.pjask.stocknews.models.NewsModel;
-import pl.pjask.stocknews.utils.BankierParser;
+import java.util.ArrayList;
 
 public class NewsListFragment extends Fragment {
-    private static final String TAG = "NewsListFragment";
-
     private RecyclerView mRecyclerView;
 
-    private String stockSymbol;
+    private ArrayList<String> stockSymbols;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        NewsProvider.getInstance(getContext()).setDataChangeListener(this::fetchNews);
+    }
 
     @Nullable
     @Override
@@ -38,8 +36,8 @@ public class NewsListFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
 
         Bundle bundle = getArguments();
-        if (bundle != null && bundle.containsKey("symbol")) {
-            stockSymbol = bundle.getString("symbol");
+        if (bundle != null && bundle.containsKey("symbols")) {
+            stockSymbols = bundle.getStringArrayList("symbols");
         }
 
         return rootView;
@@ -49,15 +47,19 @@ public class NewsListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (stockSymbol != null) {
-            new FetchNewsTask(mRecyclerView).execute(stockSymbol);
+        fetchNews();
+    }
+
+    private void fetchNews() {
+        if (stockSymbols != null) {
+            new FetchNewsTask(mRecyclerView).execute(stockSymbols.toArray(new String[0]));
         }
     }
 
     private class FetchNewsTask extends AsyncTask<String, Void, Boolean> {
         final RecyclerView mRecyclerView;
-        private BankierParser mBankierParser;
-        private List<NewsModel> mNewsModels;
+        Context context;
+        Cursor cursor;
 
         public FetchNewsTask(RecyclerView recyclerView) {
             this.mRecyclerView = recyclerView;
@@ -65,27 +67,15 @@ public class NewsListFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(String... urls) {
-            mBankierParser = new BankierParser();
-            try {
-                mNewsModels = mBankierParser.getNews(urls[0]);
-            } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
-                return false;
-            }
-            return mNewsModels != null;
-
+            context = getContext();
+            cursor = NewsProvider.getInstance(context).queryNewsFor(stockSymbols);
+            return cursor.getCount() > 0;
         }
 
         @Override
         protected void onPostExecute(Boolean success) {
             if (success) {
-                Context context = getContext();
-                Cursor cursor = NewsProvider.getInstance(context).queryNewsFor(stockSymbol);
                 mRecyclerView.setAdapter(new NewsListAdapter(context, cursor));
-
-                for (NewsModel model : mNewsModels) {
-                    NewsProvider.getInstance(getContext()).addNews(model);
-                }
             }
         }
     }

@@ -25,13 +25,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private void prepareUpdateSymbolsButton() {
         Preference button = getPreferenceManager().findPreference("update_symbols_button");
         if (button != null) {
-            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Hints.getInstance(getContext())
-                            .updateSymbolList();
-                    return true;
-                }
+            button.setOnPreferenceClickListener(preference -> {
+                Hints.getInstance(getContext())
+                        .updateSymbolList();
+                return true;
             });
         }
     }

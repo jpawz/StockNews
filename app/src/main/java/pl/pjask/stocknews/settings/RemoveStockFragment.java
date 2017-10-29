@@ -62,32 +62,24 @@ public class RemoveStockFragment extends DialogFragment {
     }
 
     private void prepareOnClickListener() {
-        mButtonOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (listView.getCheckedItemCount() > 0) {
-                    int numberOfItems = items.size();
-                    for (int i = 0; i < numberOfItems; i++) {
-                        if (itemsCheckStatus[i]) {
-                            menu.removeSymbol(items.get(i));
-                        }
+        mButtonOnClickListener = view -> {
+            if (listView.getCheckedItemCount() > 0) {
+                int numberOfItems = items.size();
+                for (int i = 0; i < numberOfItems; i++) {
+                    if (itemsCheckStatus[i]) {
+                        menu.removeSymbol(items.get(i));
                     }
-                    itemsAdapter.clear();
-                    prepareListViewData();
-                    itemsAdapter.notifyDataSetChanged();
-                    listView.clearChoices();
-
                 }
+                itemsAdapter.clear();
+                prepareListViewData();
+                itemsAdapter.notifyDataSetChanged();
+                listView.clearChoices();
+
             }
         };
     }
 
     private void prepareOnItemClickListener() {
-        mOnListClickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                itemsCheckStatus[i] = !itemsCheckStatus[i];
-            }
-        };
+        mOnListClickListener = (adapterView, view, i, l) -> itemsCheckStatus[i] = !itemsCheckStatus[i];
     }
 }
