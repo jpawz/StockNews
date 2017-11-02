@@ -1,11 +1,9 @@
-package pl.pjask.stocknews;
+package pl.pjask.stocknews.settings;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-
-import pl.pjask.stocknews.settings.SettingsFragment;
 
 
 public class SettingsActivity extends AppCompatActivity {

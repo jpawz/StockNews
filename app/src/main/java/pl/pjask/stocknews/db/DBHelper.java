@@ -34,7 +34,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + MenuTable.NAME + "(" +
                 MenuTable.Cols.ID + " INTEGER PRIMARY KEY," +
-                MenuTable.Cols.SYMBOL_NAME + " TEXT" +
+                MenuTable.Cols.SYMBOL_NAME + " TEXT," +
+                MenuTable.Cols.FETCH_NEWS + " INTEGER," +
+                MenuTable.Cols.FETCH_ESPI + " INTEGER," +
+                MenuTable.Cols.FETCH_FORUM + " INTEGER" +
                 ")"
         );
 
@@ -43,7 +46,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 NewsTable.Cols.MENU_ID + " INTEGER REFERENCES " + MenuTable.NAME + ", " +
                 NewsTable.Cols.SYMBOL + " TEXT," +
                 NewsTable.Cols.TITLE + " TEXT NOT NULL UNIQUE," +
-                NewsTable.Cols.URL + " TEXT" +
+                NewsTable.Cols.URL + " TEXT, " +
+                NewsTable.Cols.VISITED + " INTEGER" +
                 ")");
 
         db.execSQL("create table " + SymbolHintTable.NAME + "(" +

@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import pl.pjask.stocknews.Menu;
 import pl.pjask.stocknews.R;
+import pl.pjask.stocknews.utils.Menu;
 
 public class RemoveStockFragment extends DialogFragment {
 

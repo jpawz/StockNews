@@ -5,8 +5,10 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static junit.framework.Assert.assertTrue;
+import pl.pjask.stocknews.models.NewsModel;
 
+import static junit.framework.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BankierParserTest {
 
@@ -20,10 +22,10 @@ public class BankierParserTest {
         mBankierParser = new BankierParser();
     }
 
-
     @Test
     public void shouldReturnFiveItems() throws IOException {
-        assertTrue(mBankierParser.getNews(symbol).size() == 5);
+        int numberOfArticlesOnMainPage = 5;
+        assertTrue(mBankierParser.getNews(symbol).size() == numberOfArticlesOnMainPage);
     }
 
     @Test(expected = IOException.class)
@@ -41,4 +43,10 @@ public class BankierParserTest {
         assertTrue(mBankierParser.getStockMap().get(symbol).getStockFullName().equals(fullName));
     }
 
+    @Test
+    public void checkUrl() throws IOException {
+        NewsModel newsModel = mBankierParser.getNews(symbol).get(0);
+
+        assertThat(newsModel.getUrl()).startsWith("www.bankier.pl").endsWith(".html");
+    }
 }

@@ -42,11 +42,13 @@ public class BankierParser {
         Elements boxes = document.getElementsByClass(NEWS_CLASS);
         Element newsElement = boxes.get(0);
         Elements newsElements = newsElement.getElementsByTag("li");
+        Elements urlElements = newsElement.getElementsByTag("a");
 
         NewsModel news;
-        for (Element element : newsElements) {
-            news = new NewsModel(element.text());
+        for (int i = 0; i < newsElements.size(); i++) {
+            news = new NewsModel(newsElements.get(i).text());
             news.setStockSymbol(symbol);
+            news.setUrl("http://www.bankier.pl" + urlElements.get(i).attr("href"));
             newsModels.add(news);
         }
 
@@ -72,6 +74,12 @@ public class BankierParser {
         return symbols;
     }
 
+    /**
+     * Get map of Stocks where key are stock symbols (String) and values are Stocks.
+     *
+     * @return map of Stock.
+     * @throws IOException when error occured.
+     */
     public Map<String, Stock> getStockMap() throws IOException {
         Document document = Jsoup.connect(BANKIER_SYMBOLS_URL).get();
 

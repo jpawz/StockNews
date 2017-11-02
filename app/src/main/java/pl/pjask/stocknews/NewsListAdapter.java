@@ -16,7 +16,6 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
     private final CursorAdapter mCursorAdapter;
     private final Context mContext;
 
-
     public NewsListAdapter(Context context, Cursor cursor) {
         mContext = context;
 
@@ -27,7 +26,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = mCursorAdapter.newView(mContext, mCursorAdapter.getCursor(), parent);
 
-        return new ViewHolder(v);
+        return new ViewHolder(mContext, v);
     }
 
     @Override
@@ -41,14 +40,17 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
         return mCursorAdapter.getCount();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         final View newsView;
+        final Context context;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(Context context, View itemView) {
             super(itemView);
             newsView = itemView;
+            this.context = context;
         }
+
     }
 
     private class NewsCursorAdapter extends CursorAdapter {

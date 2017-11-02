@@ -23,10 +23,10 @@
         </activity>
 
         <activity
-            android:name=".ManageActivity"
+            android:name=".settings.ManageActivity"
             android:label="@string/manage_news"/>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:label="@string/settings"/>
     </application>
 

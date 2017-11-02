@@ -1,4 +1,4 @@
-package pl.pjask.stocknews;
+package pl.pjask.stocknews.utils;
 
 
 import android.content.ContentValues;
@@ -14,7 +14,6 @@ import java.util.List;
 
 import pl.pjask.stocknews.db.DBHelper;
 import pl.pjask.stocknews.models.NewsModel;
-import pl.pjask.stocknews.utils.BankierParser;
 
 import static pl.pjask.stocknews.db.DBSchema.NewsTable;
 
@@ -58,7 +57,7 @@ public class NewsProvider {
      */
     public Cursor queryNewsFor(ArrayList<String> stockSymbols) {
         String tableName = NewsTable.NAME;
-        String[] columns = new String[]{NewsTable.Cols.ID, NewsTable.Cols.TITLE, NewsTable.Cols.SYMBOL};
+        String[] columns = new String[]{NewsTable.Cols.ID, NewsTable.Cols.TITLE, NewsTable.Cols.SYMBOL, NewsTable.Cols.URL};
         String questionMarks = (new String(new char[stockSymbols.size()]).replace("\0", "?, "));
         questionMarks = questionMarks.substring(0, questionMarks.length() - 2);
         String selection = NewsTable.Cols.SYMBOL + " IN (" + questionMarks + ")";
@@ -88,6 +87,7 @@ public class NewsProvider {
         ContentValues values = new ContentValues();
         values.put(NewsTable.Cols.TITLE, newsModel.getTitle());
         values.put(NewsTable.Cols.SYMBOL, newsModel.getStockSymbol());
+        values.put(NewsTable.Cols.URL, newsModel.getUrl());
 
         return values;
     }

@@ -7,6 +7,9 @@ public class DBSchema {
         public static final class Cols {
             public static final String ID = "id";
             public static final String SYMBOL_NAME = "symbol";
+            public static final String FETCH_NEWS = "news";
+            public static final String FETCH_ESPI = "espi";
+            public static final String FETCH_FORUM = "forum";
         }
     }
 
@@ -19,6 +22,7 @@ public class DBSchema {
             public static final String SYMBOL = "symbol";
             public static final String TITLE = "title";
             public static final String URL = "url";
+            public static final String VISITED = "visited";
         }
     }
 

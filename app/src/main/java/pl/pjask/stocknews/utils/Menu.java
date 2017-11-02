@@ -1,4 +1,4 @@
-package pl.pjask.stocknews;
+package pl.pjask.stocknews.utils;
 
 
 import android.content.ContentValues;
@@ -77,7 +77,10 @@ public class Menu {
     private StockCursorWrapper queryStocks() {
         Cursor cursor = mDatabase.query(
                 MenuTable.NAME,
-                new String[]{MenuTable.Cols.SYMBOL_NAME},
+                new String[]{MenuTable.Cols.SYMBOL_NAME,
+                        MenuTable.Cols.FETCH_NEWS,
+                        MenuTable.Cols.FETCH_ESPI,
+                        MenuTable.Cols.FETCH_FORUM},
                 null,
                 null,
                 null,
@@ -91,6 +94,9 @@ public class Menu {
     private ContentValues getContentValues(Stock symbol) {
         ContentValues values = new ContentValues();
         values.put(MenuTable.Cols.SYMBOL_NAME, symbol.getStockSymbol());
+        values.put(MenuTable.Cols.FETCH_NEWS, symbol.fetchNews() ? 1 : 0);
+        values.put(MenuTable.Cols.FETCH_ESPI, symbol.fetchEspi() ? 1 : 0);
+        values.put(MenuTable.Cols.FETCH_FORUM, symbol.fetchForum() ? 1 : 0);
 
         return values;
     }

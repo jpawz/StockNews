@@ -17,7 +17,11 @@ import android.view.SubMenu;
 import java.util.ArrayList;
 import java.util.Set;
 
+import pl.pjask.stocknews.settings.ManageActivity;
+import pl.pjask.stocknews.settings.SettingsActivity;
 import pl.pjask.stocknews.utils.Hints;
+import pl.pjask.stocknews.utils.Menu;
+import pl.pjask.stocknews.utils.NewsProvider;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "stocknews";

@@ -1,7 +1,9 @@
 package pl.pjask.stocknews;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,10 +16,16 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import pl.pjask.stocknews.db.DBSchema;
+import pl.pjask.stocknews.utils.ItemClickSupport;
+import pl.pjask.stocknews.utils.NewsProvider;
+
 public class NewsListFragment extends Fragment {
     private RecyclerView mRecyclerView;
 
     private ArrayList<String> stockSymbols;
+    private Cursor cursor;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,6 +43,14 @@ public class NewsListFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
 
+        ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener((recyclerView, position, view) -> {
+            cursor.moveToPosition(position);
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(
+                            cursor.getString(cursor.getColumnIndexOrThrow(DBSchema.NewsTable.Cols.URL)))));
+        });
+
+
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey("symbols")) {
             stockSymbols = bundle.getStringArrayList("symbols");
@@ -42,6 +58,7 @@ public class NewsListFragment extends Fragment {
 
         return rootView;
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -59,7 +76,6 @@ public class NewsListFragment extends Fragment {
     private class FetchNewsTask extends AsyncTask<String, Void, Boolean> {
         final RecyclerView mRecyclerView;
         Context context;
-        Cursor cursor;
 
         public FetchNewsTask(RecyclerView recyclerView) {
             this.mRecyclerView = recyclerView;

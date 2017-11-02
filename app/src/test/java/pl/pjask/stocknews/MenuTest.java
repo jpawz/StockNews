@@ -10,6 +10,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import pl.pjask.stocknews.models.Stock;
+import pl.pjask.stocknews.utils.Menu;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static org.junit.Assert.assertTrue;

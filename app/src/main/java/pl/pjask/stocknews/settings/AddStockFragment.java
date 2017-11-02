@@ -1,6 +1,5 @@
 package pl.pjask.stocknews.settings;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -10,13 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.FilterQueryProvider;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
-import pl.pjask.stocknews.Menu;
 import pl.pjask.stocknews.R;
 import pl.pjask.stocknews.models.Stock;
 import pl.pjask.stocknews.utils.Hints;
+import pl.pjask.stocknews.utils.Menu;
 
 import static pl.pjask.stocknews.db.DBSchema.SymbolHintTable;
 
@@ -24,6 +23,9 @@ import static pl.pjask.stocknews.db.DBSchema.SymbolHintTable;
 public class AddStockFragment extends DialogFragment implements View.OnClickListener {
 
     private AutoCompleteTextView mTextView;
+    private CheckBox fetchNews;
+    private CheckBox fetchEspi;
+    private CheckBox fetchForum;
 
     @Nullable
     @Override
@@ -32,6 +34,9 @@ public class AddStockFragment extends DialogFragment implements View.OnClickList
         View view = inflater.inflate(R.layout.fragment_add_stock, container, false);
 
         Button addButton = view.findViewById(R.id.button_add);
+        fetchNews = view.findViewById(R.id.fetch_news);
+        fetchEspi = view.findViewById(R.id.fetch_espi);
+        fetchForum = view.findViewById(R.id.fetch_forum);
 
         prepareAutocompleteTextView(view);
 
@@ -62,12 +67,7 @@ public class AddStockFragment extends DialogFragment implements View.OnClickList
             return cursor.getString(colIndex);
         });
 
-        symbolNameAdapter.setFilterQueryProvider(new FilterQueryProvider() {
-            @Override
-            public Cursor runQuery(CharSequence charSequence) {
-                return hints.getSymbolFor(charSequence.toString());
-            }
-        });
+        symbolNameAdapter.setFilterQueryProvider(charSequence -> hints.getSymbolFor(charSequence.toString()));
 
         mTextView.setAdapter(symbolNameAdapter);
     }
@@ -80,6 +80,9 @@ public class AddStockFragment extends DialogFragment implements View.OnClickList
         }
 
         Stock stock = new Stock(stockSymbol);
+        stock.setFetchNews(fetchNews.isChecked());
+        stock.setFetchEspi(fetchEspi.isChecked());
+        stock.setFetchForum(fetchForum.isChecked());
 
         Menu menu = Menu.getInstance(getContext());
         menu.addSymbol(stock);
