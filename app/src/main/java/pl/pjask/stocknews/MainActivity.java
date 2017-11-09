@@ -15,8 +15,9 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
 
+import pl.pjask.stocknews.models.Stock;
 import pl.pjask.stocknews.settings.ManageActivity;
 import pl.pjask.stocknews.settings.SettingsActivity;
 import pl.pjask.stocknews.utils.Hints;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = "stocknews";
     private Menu menu;
     private DrawerLayout mDrawer;
-    private ArrayList<String> activeStockSymbols;
+    private ArrayList<Stock> activeStocks = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,12 +71,16 @@ public class MainActivity extends AppCompatActivity {
                 mDrawer.openDrawer(GravityCompat.START);
                 return true;
             case R.id.refresh:
-                for (String symbol : activeStockSymbols) {
-                    NewsProvider.getInstance(this).updateNews(symbol);
-                }
+                updateNews();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateNews() {
+        for (Stock stock : activeStocks) {
+            NewsProvider.getInstance(this).updateArticles(stock);
+        }
     }
 
     private void prepareRootLayout() {
@@ -110,16 +115,14 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = findViewById(R.id.navigation_view);
         setupDrawerContent(navigationView);
 
-        Set<String> menuItems = menu.getSymbolNames();
+        List<String> menuItems = menu.getSymbolNames();
 
         MenuItem stockGroupItem = navigationView.getMenu().getItem(1);
         SubMenu subMenu = stockGroupItem.getSubMenu();
         subMenu.clear();
 
-        if (menuItems != null) {
-            for (String item : menuItems) {
-                subMenu.add(item);
-            }
+        for (String item : menuItems) {
+            subMenu.add(item);
         }
     }
 
@@ -153,8 +156,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             default:
                 fragmentClass = NewsListFragment.class;
-                activeStockSymbols = new ArrayList<>();
-                activeStockSymbols.add(item.getTitle().toString());
+                activeStocks.clear();
+                activeStocks.add(menu.getStock(item.getTitle().toString()));
         }
 
         try {
@@ -165,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Bundle fragmentArgs = new Bundle();
-        fragmentArgs.putStringArrayList("symbols", activeStockSymbols);
+        fragmentArgs.putStringArrayList("symbols", getActiveStockSymbolNames());
 
         assert fragment != null;
         fragment.setArguments(fragmentArgs);
@@ -178,8 +181,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setActiveStockSymbolsForAllSymbols() {
-        activeStockSymbols = new ArrayList<>();
-        Set<String> menuItems = menu.getSymbolNames();
-        activeStockSymbols.addAll(menuItems);
+        activeStocks = new ArrayList<>();
+        activeStocks.addAll(menu.getStocks());
+    }
+
+    private ArrayList<String> getActiveStockSymbolNames() {
+        ArrayList<String> names = new ArrayList<>();
+        for (Stock stock : activeStocks) {
+            names.add(stock.getStockSymbol());
+        }
+        return names;
     }
 }

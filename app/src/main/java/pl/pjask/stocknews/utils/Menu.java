@@ -6,8 +6,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import pl.pjask.stocknews.db.DBHelper;
 import pl.pjask.stocknews.db.DBSchema.MenuTable;
@@ -37,7 +37,7 @@ public class Menu {
 
     public void addSymbol(Stock symbol) {
         ContentValues values = getContentValues(symbol);
-        mDatabase.insert(MenuTable.NAME, null, values);
+        mDatabase.insertWithOnConflict(MenuTable.NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         if (mMenuChangeListener != null) {
             mMenuChangeListener.onMenuChanged();
         }
@@ -51,8 +51,8 @@ public class Menu {
         }
     }
 
-    private Set<Stock> getStocks() {
-        Set<Stock> menuSet = new TreeSet<>();
+    public List<Stock> getStocks() {
+        List<Stock> menuSet = new ArrayList<>();
 
         StockCursorWrapper cursor = queryStocks();
 
@@ -64,9 +64,25 @@ public class Menu {
         return menuSet;
     }
 
-    public Set<String> getSymbolNames() {
-        Set<Stock> stocks = getStocks();
-        Set<String> symbolNames = new TreeSet<>();
+    public Stock getStock(String symbol) {
+        Cursor cursor = mDatabase.query(
+                MenuTable.NAME,
+                new String[]{MenuTable.Cols.SYMBOL_NAME,
+                        MenuTable.Cols.FETCH_NEWS,
+                        MenuTable.Cols.FETCH_ESPI},
+                MenuTable.Cols.SYMBOL_NAME + " = ?",
+                new String[]{symbol},
+                null,
+                null,
+                null);
+        StockCursorWrapper wrapper = new StockCursorWrapper(cursor);
+        wrapper.moveToFirst();
+        return wrapper.getStock();
+    }
+
+    public List<String> getSymbolNames() {
+        List<Stock> stocks = getStocks();
+        List<String> symbolNames = new ArrayList<>();
         for (Stock stock : stocks) {
             symbolNames.add(stock.getStockSymbol());
         }
@@ -79,8 +95,7 @@ public class Menu {
                 MenuTable.NAME,
                 new String[]{MenuTable.Cols.SYMBOL_NAME,
                         MenuTable.Cols.FETCH_NEWS,
-                        MenuTable.Cols.FETCH_ESPI,
-                        MenuTable.Cols.FETCH_FORUM},
+                        MenuTable.Cols.FETCH_ESPI},
                 null,
                 null,
                 null,
@@ -96,7 +111,6 @@ public class Menu {
         values.put(MenuTable.Cols.SYMBOL_NAME, symbol.getStockSymbol());
         values.put(MenuTable.Cols.FETCH_NEWS, symbol.fetchNews() ? 1 : 0);
         values.put(MenuTable.Cols.FETCH_ESPI, symbol.fetchEspi() ? 1 : 0);
-        values.put(MenuTable.Cols.FETCH_FORUM, symbol.fetchForum() ? 1 : 0);
 
         return values;
     }

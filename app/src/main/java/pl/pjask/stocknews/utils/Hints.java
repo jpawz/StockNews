@@ -62,16 +62,16 @@ public class Hints {
      * @return cursor matching pattern: "symbolFragment*".
      */
     public Cursor getSymbolFor(String symbolFragment) {
-        StringBuilder sqlQuery = new StringBuilder(" SELECT ").append(SymbolHintTable.Cols.ID)
-                .append(", ").append(SymbolHintTable.Cols.SYMBOL_NAME)
-                .append(", ").append(SymbolHintTable.Cols.FULL_NAME)
-                .append(" FROM ").append(SymbolHintTable.NAME)
-                .append(" WHERE ").append(SymbolHintTable.Cols.SYMBOL_NAME)
-                .append(" LIKE '").append(symbolFragment).append("%' ")
-                .append(" ORDER BY ").append(SymbolHintTable.Cols.SYMBOL_NAME);
+        String sqlQuery = " SELECT " + SymbolHintTable.Cols.ID +
+                ", " + SymbolHintTable.Cols.SYMBOL_NAME +
+                ", " + SymbolHintTable.Cols.FULL_NAME +
+                " FROM " + SymbolHintTable.NAME +
+                " WHERE " + SymbolHintTable.Cols.SYMBOL_NAME +
+                " LIKE '" + symbolFragment + "%' " +
+                " ORDER BY " + SymbolHintTable.Cols.SYMBOL_NAME;
 
 
-        return mDatabase.rawQuery(sqlQuery.toString(), null);
+        return mDatabase.rawQuery(sqlQuery, null);
     }
 
     /**

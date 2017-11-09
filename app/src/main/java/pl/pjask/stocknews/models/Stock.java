@@ -7,7 +7,6 @@ public class Stock implements Comparable<Stock> {
     private String stockFullName;
     private boolean fetchNews;
     private boolean fetchEspi;
-    private boolean fetchForum;
 
     public Stock(String stockSymbol) {
         this.stockSymbol = stockSymbol;
@@ -27,14 +26,6 @@ public class Stock implements Comparable<Stock> {
 
     public void setFetchEspi(boolean fetchEspi) {
         this.fetchEspi = fetchEspi;
-    }
-
-    public boolean fetchForum() {
-        return fetchForum;
-    }
-
-    public void setFetchForum(boolean fetchForum) {
-        this.fetchForum = fetchForum;
     }
 
     public String getStockFullName() {

@@ -25,12 +25,12 @@ public class BankierParserTest {
     @Test
     public void shouldReturnFiveItems() throws IOException {
         int numberOfArticlesOnMainPage = 5;
-        assertTrue(mBankierParser.getNews(symbol).size() == numberOfArticlesOnMainPage);
+        assertTrue(mBankierParser.getArticles(symbol).size() == numberOfArticlesOnMainPage);
     }
 
     @Test(expected = IOException.class)
     public void exceptionShouldBeThrownWhenUrlIsWrong() throws Exception {
-        mBankierParser.getNews("unknownSymbol");
+        mBankierParser.getArticles("unknownSymbol");
     }
 
     @Test
@@ -45,7 +45,7 @@ public class BankierParserTest {
 
     @Test
     public void checkUrl() throws IOException {
-        NewsModel newsModel = mBankierParser.getNews(symbol).get(0);
+        NewsModel newsModel = mBankierParser.getArticles(symbol).get(0);
 
         assertThat(newsModel.getUrl()).startsWith("www.bankier.pl").endsWith(".html");
     }

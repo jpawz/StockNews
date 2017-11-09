@@ -30,17 +30,10 @@
         android:checked="true"
         android:text="@string/fetch_espi"/>
 
-    <CheckBox
-        android:id="@+id/fetch_forum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fetch_espi"
-        android:text="@string/fetch_forum"/>
-
     <Button
         android:id="@+id/button_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/fetch_forum"
+        android:layout_below="@+id/fetch_espi"
         android:text="@string/add_symbol"/>
 </RelativeLayout>

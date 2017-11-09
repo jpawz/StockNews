@@ -14,6 +14,7 @@ import java.util.List;
 
 import pl.pjask.stocknews.db.DBHelper;
 import pl.pjask.stocknews.models.NewsModel;
+import pl.pjask.stocknews.models.Stock;
 
 import static pl.pjask.stocknews.db.DBSchema.NewsTable;
 
@@ -75,13 +76,14 @@ public class NewsProvider {
     }
 
     /**
-     * Updates news from website. Inserts data to database.
+     * Updates articles from website. Inserts data to database.
      *
-     * @param stockSymbol symbol to update.
+     * @param stock symbol to update.
      */
-    public void updateNews(String stockSymbol) {
-        new UpdateNewsTask().execute(stockSymbol);
+    public void updateArticles(Stock stock) {
+        new UpdateTask().execute(stock);
     }
+
 
     private ContentValues getContentValues(NewsModel newsModel) {
         ContentValues values = new ContentValues();
@@ -96,17 +98,17 @@ public class NewsProvider {
         void onDataChanged();
     }
 
-    private class UpdateNewsTask extends AsyncTask<String, Void, Boolean> {
+    private class UpdateTask extends AsyncTask<Stock, Void, Boolean> {
         private BankierParser mBankierParser;
         private List<NewsModel> mNewsModels;
 
         @Override
-        protected Boolean doInBackground(String... urls) {
+        protected Boolean doInBackground(Stock... stocks) {
             mBankierParser = new BankierParser();
             try {
                 mNewsModels = new ArrayList<>();
-                for (String url : urls) {
-                    mNewsModels.addAll(mBankierParser.getNews(url));
+                for (Stock symbol : stocks) {
+                    mNewsModels.addAll(mBankierParser.getArticles(symbol));
                 }
             } catch (IOException e) {
                 Log.e("NewsProvider", e.getMessage());
@@ -128,5 +130,4 @@ public class NewsProvider {
             }
         }
     }
-
 }

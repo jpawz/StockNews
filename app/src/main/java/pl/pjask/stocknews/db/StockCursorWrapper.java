@@ -17,13 +17,10 @@ public class StockCursorWrapper extends CursorWrapper {
         String stockSymbol = getString(getColumnIndex(MenuTable.Cols.SYMBOL_NAME));
         int fetchNews = getInt(getColumnIndex(MenuTable.Cols.FETCH_NEWS));
         int fetchEspi = getInt(getColumnIndex(MenuTable.Cols.FETCH_ESPI));
-        int fetchForum = getInt(getColumnIndex(MenuTable.Cols.FETCH_FORUM));
-
 
         Stock stock = new Stock(stockSymbol);
         stock.setFetchNews(fetchNews == 1);
         stock.setFetchEspi(fetchEspi == 1);
-        stock.setFetchForum(fetchForum == 1);
         return stock;
     }
 }

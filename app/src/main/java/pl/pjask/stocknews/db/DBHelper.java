@@ -34,10 +34,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + MenuTable.NAME + "(" +
                 MenuTable.Cols.ID + " INTEGER PRIMARY KEY," +
-                MenuTable.Cols.SYMBOL_NAME + " TEXT," +
+                MenuTable.Cols.SYMBOL_NAME + " TEXT NOT NULL UNIQUE, " +
                 MenuTable.Cols.FETCH_NEWS + " INTEGER," +
-                MenuTable.Cols.FETCH_ESPI + " INTEGER," +
-                MenuTable.Cols.FETCH_FORUM + " INTEGER" +
+                MenuTable.Cols.FETCH_ESPI + " INTEGER" +
                 ")"
         );
 

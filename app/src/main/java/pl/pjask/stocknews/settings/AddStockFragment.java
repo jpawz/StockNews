@@ -25,7 +25,6 @@ public class AddStockFragment extends DialogFragment implements View.OnClickList
     private AutoCompleteTextView mTextView;
     private CheckBox fetchNews;
     private CheckBox fetchEspi;
-    private CheckBox fetchForum;
 
     @Nullable
     @Override
@@ -36,7 +35,6 @@ public class AddStockFragment extends DialogFragment implements View.OnClickList
         Button addButton = view.findViewById(R.id.button_add);
         fetchNews = view.findViewById(R.id.fetch_news);
         fetchEspi = view.findViewById(R.id.fetch_espi);
-        fetchForum = view.findViewById(R.id.fetch_forum);
 
         prepareAutocompleteTextView(view);
 
@@ -82,7 +80,6 @@ public class AddStockFragment extends DialogFragment implements View.OnClickList
         Stock stock = new Stock(stockSymbol);
         stock.setFetchNews(fetchNews.isChecked());
         stock.setFetchEspi(fetchEspi.isChecked());
-        stock.setFetchForum(fetchForum.isChecked());
 
         Menu menu = Menu.getInstance(getContext());
         menu.addSymbol(stock);

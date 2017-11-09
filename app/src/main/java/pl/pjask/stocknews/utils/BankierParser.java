@@ -1,5 +1,7 @@
 package pl.pjask.stocknews.utils;
 
+import android.support.annotation.NonNull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,29 +31,43 @@ public class BankierParser {
     private static final String NEWS_CLASS = "boxContent boxList";
 
     /**
-     * Returns header of news for given symbol.
+     * Returns header of articles for given stock.
      *
-     * @param symbol symbol name for example: KGHM, PGE, PKOBP...
+     * @param stock stock name for example: KGHM, PGE, PKOBP...
      * @return List of NewsModels
      * @throws IOException when website can't parsed.
      */
-    public List<NewsModel> getNews(String symbol) throws IOException {
+    public List<NewsModel> getArticles(Stock stock) throws IOException {
+        int newsBoxNumber = 0;
+        int espiBoxNumber = 1;
         List<NewsModel> newsModels = new ArrayList<>();
 
-        Document document = Jsoup.connect(BANKIER_NEWS_URL_TEMPLATE + symbol).get();
+        if (stock.fetchNews())
+            newsModels.addAll(getNewsModels(stock, newsBoxNumber));
+
+        if (stock.fetchEspi())
+            newsModels.addAll(getNewsModels(stock, espiBoxNumber));
+
+        return newsModels;
+    }
+
+    @NonNull
+    private List<NewsModel> getNewsModels(Stock symbol, int boxNumber) throws IOException {
+        List<NewsModel> newsModels = new ArrayList<>();
+
+        Document document = Jsoup.connect(BANKIER_NEWS_URL_TEMPLATE + symbol.getStockSymbol()).get();
         Elements boxes = document.getElementsByClass(NEWS_CLASS);
-        Element newsElement = boxes.get(0);
+        Element newsElement = boxes.get(boxNumber);
         Elements newsElements = newsElement.getElementsByTag("li");
         Elements urlElements = newsElement.getElementsByTag("a");
 
         NewsModel news;
         for (int i = 0; i < newsElements.size(); i++) {
             news = new NewsModel(newsElements.get(i).text());
-            news.setStockSymbol(symbol);
+            news.setStockSymbol(symbol.getStockSymbol());
             news.setUrl("http://www.bankier.pl" + urlElements.get(i).attr("href"));
             newsModels.add(news);
         }
-
         return newsModels;
     }
 
@@ -78,7 +94,7 @@ public class BankierParser {
      * Get map of Stocks where key are stock symbols (String) and values are Stocks.
      *
      * @return map of Stock.
-     * @throws IOException when error occured.
+     * @throws IOException when error occurred.
      */
     public Map<String, Stock> getStockMap() throws IOException {
         Document document = Jsoup.connect(BANKIER_SYMBOLS_URL).get();

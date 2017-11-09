@@ -9,7 +9,6 @@ public class DBSchema {
             public static final String SYMBOL_NAME = "symbol";
             public static final String FETCH_NEWS = "news";
             public static final String FETCH_ESPI = "espi";
-            public static final String FETCH_FORUM = "forum";
         }
     }
 

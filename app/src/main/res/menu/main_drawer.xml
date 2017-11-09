@@ -6,7 +6,6 @@
     </item>
 
     <item
-        android:id="@+id/stock_group"
         android:title="@string/my_stocks_title">
         <menu>
 
