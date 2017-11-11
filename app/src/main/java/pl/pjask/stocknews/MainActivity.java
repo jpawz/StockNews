@@ -20,13 +20,13 @@ import java.util.List;
 import pl.pjask.stocknews.models.Stock;
 import pl.pjask.stocknews.settings.ManageActivity;
 import pl.pjask.stocknews.settings.SettingsActivity;
+import pl.pjask.stocknews.utils.ArticlesProvider;
 import pl.pjask.stocknews.utils.Hints;
-import pl.pjask.stocknews.utils.Menu;
-import pl.pjask.stocknews.utils.NewsProvider;
+import pl.pjask.stocknews.utils.MenuUtils;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "stocknews";
-    private Menu menu;
+    private MenuUtils mMenuUtils;
     private DrawerLayout mDrawer;
     private ArrayList<Stock> activeStocks = new ArrayList<>();
 
@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
         Hints hints = Hints.getInstance(this);
         hints.updateSymbolList();
 
-        menu = Menu.getInstance(this);
-        menu.setMenuChangeListener(this::prepareNavigationDrawer);
+        mMenuUtils = MenuUtils.getInstance(this);
+        mMenuUtils.setMenuChangeListener(this::prepareNavigationDrawer);
         setActiveStockSymbolsForAllSymbols();
 
         prepareNavigationDrawer();
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateNews() {
         for (Stock stock : activeStocks) {
-            NewsProvider.getInstance(this).updateArticles(stock);
+            ArticlesProvider.getInstance(this).updateArticles(stock);
         }
     }
 
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment = fm.findFragmentById(R.id.root_layout);
 
         if (fragment == null) {
-            fragment = new NewsListFragment();
+            fragment = new ArticlesListFragment();
             fm.beginTransaction()
                     .add(R.id.root_layout, fragment)
                     .commit();
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = findViewById(R.id.navigation_view);
         setupDrawerContent(navigationView);
 
-        List<String> menuItems = menu.getSymbolNames();
+        List<String> menuItems = mMenuUtils.getSymbolNames();
 
         MenuItem stockGroupItem = navigationView.getMenu().getItem(1);
         SubMenu subMenu = stockGroupItem.getSubMenu();
@@ -151,13 +151,13 @@ public class MainActivity extends AppCompatActivity {
                 mDrawer.closeDrawers();
                 return;
             case R.id.all_stocks:
-                fragmentClass = NewsListFragment.class;
+                fragmentClass = ArticlesListFragment.class;
                 setActiveStockSymbolsForAllSymbols();
                 break;
             default:
-                fragmentClass = NewsListFragment.class;
+                fragmentClass = ArticlesListFragment.class;
                 activeStocks.clear();
-                activeStocks.add(menu.getStock(item.getTitle().toString()));
+                activeStocks.add(mMenuUtils.getStock(item.getTitle().toString()));
         }
 
         try {
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setActiveStockSymbolsForAllSymbols() {
         activeStocks = new ArrayList<>();
-        activeStocks.addAll(menu.getStocks());
+        activeStocks.addAll(mMenuUtils.getStocks());
     }
 
     private ArrayList<String> getActiveStockSymbolNames() {

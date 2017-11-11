@@ -22,10 +22,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static pl.pjask.stocknews.db.DBSchema.MenuTable;
-import static pl.pjask.stocknews.db.DBSchema.NewsTable;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = LOLLIPOP, manifest = "/src/main/AndroidManifest.xml")
+@Config(constants = BuildConfig.class, sdk = LOLLIPOP, manifest = "src/main/AndroidManifest.xml")
 public class DBHelperTest {
 
     private DBHelper dbHelper;
@@ -64,12 +63,12 @@ public class DBHelperTest {
 
     @Test
     public void checkCols() {
-        Cursor cursor = db.query(NewsTable.NAME, null, null, null, null, null, null);
+        Cursor cursor = db.query(DBSchema.ArticlesTable.NAME, null, null, null, null, null, null);
         assertNotNull(cursor);
 
 
         assertEquals("not all newsTable columns were created",
-                NewsTable.Cols.class.getFields().length, cursor.getColumnNames().length);
+                DBSchema.ArticlesTable.Cols.class.getFields().length, cursor.getColumnNames().length);
 
     }
 

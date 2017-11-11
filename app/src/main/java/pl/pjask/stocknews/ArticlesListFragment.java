@@ -17,10 +17,10 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import pl.pjask.stocknews.db.DBSchema;
+import pl.pjask.stocknews.utils.ArticlesProvider;
 import pl.pjask.stocknews.utils.ItemClickSupport;
-import pl.pjask.stocknews.utils.NewsProvider;
 
-public class NewsListFragment extends Fragment {
+public class ArticlesListFragment extends Fragment {
     private RecyclerView mRecyclerView;
 
     private ArrayList<String> stockSymbols;
@@ -30,7 +30,7 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        NewsProvider.getInstance(getContext()).setDataChangeListener(this::fetchNews);
+        ArticlesProvider.getInstance(getContext()).setDataChangeListener(this::fetchNews);
     }
 
     @Nullable
@@ -47,7 +47,7 @@ public class NewsListFragment extends Fragment {
             cursor.moveToPosition(position);
             startActivity(new Intent(Intent.ACTION_VIEW,
                     Uri.parse(
-                            cursor.getString(cursor.getColumnIndexOrThrow(DBSchema.NewsTable.Cols.URL)))));
+                            cursor.getString(cursor.getColumnIndexOrThrow(DBSchema.ArticlesTable.Cols.URL)))));
         });
 
 
@@ -84,14 +84,14 @@ public class NewsListFragment extends Fragment {
         @Override
         protected Boolean doInBackground(String... urls) {
             context = getContext();
-            cursor = NewsProvider.getInstance(context).queryNewsFor(stockSymbols);
+            cursor = ArticlesProvider.getInstance(context).queryNewsFor(stockSymbols);
             return cursor.getCount() > 0;
         }
 
         @Override
         protected void onPostExecute(Boolean success) {
             if (success) {
-                mRecyclerView.setAdapter(new NewsListAdapter(context, cursor));
+                mRecyclerView.setAdapter(new ArticlesListAdapter(context, cursor));
             }
         }
     }

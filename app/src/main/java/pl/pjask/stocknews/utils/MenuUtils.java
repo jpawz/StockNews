@@ -14,21 +14,21 @@ import pl.pjask.stocknews.db.DBSchema.MenuTable;
 import pl.pjask.stocknews.db.StockCursorWrapper;
 import pl.pjask.stocknews.models.Stock;
 
-public class Menu {
-    private static Menu menu;
+public class MenuUtils {
+    private static MenuUtils menuUtils;
     private final SQLiteDatabase mDatabase;
     private MenuChangeListener mMenuChangeListener;
 
-    private Menu(Context context) {
+    private MenuUtils(Context context) {
         mDatabase = DBHelper.getInstance(context)
                 .getWritableDatabase();
     }
 
-    public static synchronized Menu getInstance(Context context) {
-        if (menu == null) {
-            menu = new Menu(context);
+    public static synchronized MenuUtils getInstance(Context context) {
+        if (menuUtils == null) {
+            menuUtils = new MenuUtils(context);
         }
-        return menu;
+        return menuUtils;
     }
 
     public void setMenuChangeListener(MenuChangeListener listener) {

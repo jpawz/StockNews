@@ -15,7 +15,7 @@ import android.widget.Toast;
 import pl.pjask.stocknews.R;
 import pl.pjask.stocknews.models.Stock;
 import pl.pjask.stocknews.utils.Hints;
-import pl.pjask.stocknews.utils.Menu;
+import pl.pjask.stocknews.utils.MenuUtils;
 
 import static pl.pjask.stocknews.db.DBSchema.SymbolHintTable;
 
@@ -81,8 +81,8 @@ public class AddStockFragment extends DialogFragment implements View.OnClickList
         stock.setFetchNews(fetchNews.isChecked());
         stock.setFetchEspi(fetchEspi.isChecked());
 
-        Menu menu = Menu.getInstance(getContext());
-        menu.addSymbol(stock);
+        MenuUtils menuUtils = MenuUtils.getInstance(getContext());
+        menuUtils.addSymbol(stock);
 
         mTextView.setText("");
         Toast.makeText(getContext(), stockSymbol + " added!", Toast.LENGTH_SHORT)

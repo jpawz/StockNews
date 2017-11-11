@@ -5,14 +5,16 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import pl.pjask.stocknews.models.NewsModel;
+import pl.pjask.stocknews.models.ArticleModel;
+import pl.pjask.stocknews.models.Stock;
 
+import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.Assert.assertTrue;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class BankierParserTest {
 
-    final String symbol = "KGHM";
+    final Stock symbol = new Stock("KGHM");
+    final String exemplarySymbol = "KGHM";
     final String fullName = "KGHM Polska Miedź SA";
 
     BankierParser mBankierParser;
@@ -20,6 +22,8 @@ public class BankierParserTest {
     @Before
     public void setUp() {
         mBankierParser = new BankierParser();
+        symbol.setFetchNews(true);
+        symbol.setFetchEspi(false);
     }
 
     @Test
@@ -30,23 +34,34 @@ public class BankierParserTest {
 
     @Test(expected = IOException.class)
     public void exceptionShouldBeThrownWhenUrlIsWrong() throws Exception {
-        mBankierParser.getArticles("unknownSymbol");
+        Stock unknownStock = new Stock("unknown");
+        unknownStock.setFetchNews(true);
+        mBankierParser.getArticles(unknownStock);
     }
 
     @Test
     public void symbolsShouldContainKGHM() throws IOException {
-        assertTrue(mBankierParser.getSymbols().contains(symbol));
+        assertTrue(mBankierParser.getSymbols().contains(symbol.getStockSymbol()));
     }
 
     @Test
     public void checkFullNameOfSymbol() throws IOException {
-        assertTrue(mBankierParser.getStockMap().get(symbol).getStockFullName().equals(fullName));
+        assertTrue(mBankierParser.getStockMap().get(symbol.getStockSymbol()).getStockFullName().equals(fullName));
     }
 
     @Test
     public void checkUrl() throws IOException {
-        NewsModel newsModel = mBankierParser.getArticles(symbol).get(0);
+        ArticleModel articleModel = mBankierParser.getArticles(symbol).get(0);
 
-        assertThat(newsModel.getUrl()).startsWith("www.bankier.pl").endsWith(".html");
+        assertThat(articleModel.getUrl()).startsWith("http://www.bankier.pl");
+        assertThat(articleModel.getUrl()).endsWith(".html");
+    }
+
+    @Test
+    public void checkDateString() throws IOException {
+        String datePattern = "....-..-..";
+        ArticleModel articleModel = mBankierParser.getArticles(symbol).get(0);
+
+        assertThat(articleModel.getDate()).matches(datePattern);
     }
 }

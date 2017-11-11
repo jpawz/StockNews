@@ -13,26 +13,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.pjask.stocknews.db.DBHelper;
-import pl.pjask.stocknews.models.NewsModel;
+import pl.pjask.stocknews.models.ArticleModel;
 import pl.pjask.stocknews.models.Stock;
 
-import static pl.pjask.stocknews.db.DBSchema.NewsTable;
+import static pl.pjask.stocknews.db.DBSchema.ArticlesTable;
 
-public class NewsProvider {
-    private static NewsProvider mNewsProvider;
+public class ArticlesProvider {
+    private static ArticlesProvider mArticlesProvider;
     private final SQLiteDatabase db;
     private DataChangeListener mDataChangeListener;
 
-    private NewsProvider(Context context) {
+    private ArticlesProvider(Context context) {
         db = DBHelper.getInstance(context)
                 .getWritableDatabase();
     }
 
-    public static synchronized NewsProvider getInstance(Context context) {
-        if (mNewsProvider == null) {
-            mNewsProvider = new NewsProvider(context);
+    public static synchronized ArticlesProvider getInstance(Context context) {
+        if (mArticlesProvider == null) {
+            mArticlesProvider = new ArticlesProvider(context);
         }
-        return mNewsProvider;
+        return mArticlesProvider;
     }
 
     public void setDataChangeListener(DataChangeListener dataChangeListener) {
@@ -40,13 +40,13 @@ public class NewsProvider {
     }
 
     /**
-     * Inserts NewsModel into NewsTable in database.
+     * Inserts {@link ArticleModel} into ArticlesTable in database.
      *
-     * @param newsModel NewsModel to insert.
+     * @param articleModel {@link ArticleModel} to insert.
      */
-    private void addNews(NewsModel newsModel) {
-        ContentValues values = getContentValues(newsModel);
-        db.insertWithOnConflict(NewsTable.NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+    private void addNews(ArticleModel articleModel) {
+        ContentValues values = getContentValues(articleModel);
+        db.insertWithOnConflict(ArticlesTable.NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
 
 
@@ -57,12 +57,17 @@ public class NewsProvider {
      * @return cursor for database query, positioned before the first entry.
      */
     public Cursor queryNewsFor(ArrayList<String> stockSymbols) {
-        String tableName = NewsTable.NAME;
-        String[] columns = new String[]{NewsTable.Cols.ID, NewsTable.Cols.TITLE, NewsTable.Cols.SYMBOL, NewsTable.Cols.URL};
+        String tableName = ArticlesTable.NAME;
+        String[] columns = new String[]{ArticlesTable.Cols.ID,
+                ArticlesTable.Cols.TITLE,
+                ArticlesTable.Cols.SYMBOL,
+                ArticlesTable.Cols.URL,
+                ArticlesTable.Cols.DATE};
         String questionMarks = (new String(new char[stockSymbols.size()]).replace("\0", "?, "));
         questionMarks = questionMarks.substring(0, questionMarks.length() - 2);
-        String selection = NewsTable.Cols.SYMBOL + " IN (" + questionMarks + ")";
+        String selection = ArticlesTable.Cols.SYMBOL + " IN (" + questionMarks + ")";
         String[] selectionArgs = stockSymbols.toArray(new String[0]);
+        String orderBy = ArticlesTable.Cols.DATE + " DESC";
 
         return db.query(
                 tableName,
@@ -71,7 +76,7 @@ public class NewsProvider {
                 selectionArgs,
                 null,
                 null,
-                null
+                orderBy
         );
     }
 
@@ -85,11 +90,12 @@ public class NewsProvider {
     }
 
 
-    private ContentValues getContentValues(NewsModel newsModel) {
+    private ContentValues getContentValues(ArticleModel articleModel) {
         ContentValues values = new ContentValues();
-        values.put(NewsTable.Cols.TITLE, newsModel.getTitle());
-        values.put(NewsTable.Cols.SYMBOL, newsModel.getStockSymbol());
-        values.put(NewsTable.Cols.URL, newsModel.getUrl());
+        values.put(ArticlesTable.Cols.TITLE, articleModel.getTitle());
+        values.put(ArticlesTable.Cols.SYMBOL, articleModel.getStockSymbol());
+        values.put(ArticlesTable.Cols.URL, articleModel.getUrl());
+        values.put(ArticlesTable.Cols.DATE, articleModel.getDate());
 
         return values;
     }
@@ -100,28 +106,28 @@ public class NewsProvider {
 
     private class UpdateTask extends AsyncTask<Stock, Void, Boolean> {
         private BankierParser mBankierParser;
-        private List<NewsModel> mNewsModels;
+        private List<ArticleModel> mArticleModels;
 
         @Override
         protected Boolean doInBackground(Stock... stocks) {
             mBankierParser = new BankierParser();
             try {
-                mNewsModels = new ArrayList<>();
+                mArticleModels = new ArrayList<>();
                 for (Stock symbol : stocks) {
-                    mNewsModels.addAll(mBankierParser.getArticles(symbol));
+                    mArticleModels.addAll(mBankierParser.getArticles(symbol));
                 }
             } catch (IOException e) {
-                Log.e("NewsProvider", e.getMessage());
+                Log.e("ArticlesProvider", e.getMessage());
                 return false;
             }
-            return mNewsModels != null;
+            return mArticleModels != null;
 
         }
 
         @Override
         protected void onPostExecute(Boolean success) {
             if (success) {
-                for (NewsModel model : mNewsModels) {
+                for (ArticleModel model : mArticleModels) {
                     addNews(model);
                 }
                 if (mDataChangeListener != null) {

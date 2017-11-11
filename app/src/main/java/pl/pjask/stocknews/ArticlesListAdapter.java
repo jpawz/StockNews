@@ -11,12 +11,12 @@ import android.widget.TextView;
 
 import pl.pjask.stocknews.db.DBSchema;
 
-public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHolder> {
+public class ArticlesListAdapter extends RecyclerView.Adapter<ArticlesListAdapter.ViewHolder> {
 
     private final CursorAdapter mCursorAdapter;
     private final Context mContext;
 
-    public NewsListAdapter(Context context, Cursor cursor) {
+    public ArticlesListAdapter(Context context, Cursor cursor) {
         mContext = context;
 
         mCursorAdapter = new NewsCursorAdapter(context, cursor);
@@ -67,7 +67,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
         public void bindView(View view, Context context, Cursor cursor) {
             TextView itemTitle = view.findViewById(R.id.item_title);
 
-            String title = cursor.getString(cursor.getColumnIndexOrThrow(DBSchema.NewsTable.Cols.TITLE));
+            String title = cursor.getString(cursor.getColumnIndexOrThrow(DBSchema.ArticlesTable.Cols.TITLE));
             itemTitle.setText(title);
         }
     }

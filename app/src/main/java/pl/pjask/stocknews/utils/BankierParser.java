@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import pl.pjask.stocknews.models.NewsModel;
+import pl.pjask.stocknews.models.ArticleModel;
 import pl.pjask.stocknews.models.Stock;
 
 
@@ -34,41 +34,43 @@ public class BankierParser {
      * Returns header of articles for given stock.
      *
      * @param stock stock name for example: KGHM, PGE, PKOBP...
-     * @return List of NewsModels
+     * @return List of {@link ArticleModel}
      * @throws IOException when website can't parsed.
      */
-    public List<NewsModel> getArticles(Stock stock) throws IOException {
+    public List<ArticleModel> getArticles(Stock stock) throws IOException {
         int newsBoxNumber = 0;
         int espiBoxNumber = 1;
-        List<NewsModel> newsModels = new ArrayList<>();
+        List<ArticleModel> articleModels = new ArrayList<>();
 
         if (stock.fetchNews())
-            newsModels.addAll(getNewsModels(stock, newsBoxNumber));
+            articleModels.addAll(getModels(stock, newsBoxNumber));
 
         if (stock.fetchEspi())
-            newsModels.addAll(getNewsModels(stock, espiBoxNumber));
+            articleModels.addAll(getModels(stock, espiBoxNumber));
 
-        return newsModels;
+        return articleModels;
     }
 
     @NonNull
-    private List<NewsModel> getNewsModels(Stock symbol, int boxNumber) throws IOException {
-        List<NewsModel> newsModels = new ArrayList<>();
+    private List<ArticleModel> getModels(Stock symbol, int boxNumber) throws IOException {
+        List<ArticleModel> articleModels = new ArrayList<>();
 
         Document document = Jsoup.connect(BANKIER_NEWS_URL_TEMPLATE + symbol.getStockSymbol()).get();
         Elements boxes = document.getElementsByClass(NEWS_CLASS);
         Element newsElement = boxes.get(boxNumber);
         Elements newsElements = newsElement.getElementsByTag("li");
         Elements urlElements = newsElement.getElementsByTag("a");
+        Elements dateElements = newsElement.getElementsByTag("time");
 
-        NewsModel news;
+        ArticleModel news;
         for (int i = 0; i < newsElements.size(); i++) {
-            news = new NewsModel(newsElements.get(i).text());
+            news = new ArticleModel(newsElements.get(i).text());
             news.setStockSymbol(symbol.getStockSymbol());
             news.setUrl("http://www.bankier.pl" + urlElements.get(i).attr("href"));
-            newsModels.add(news);
+            news.setDate(dateElements.get(i).attr("datetime"));
+            articleModels.add(news);
         }
-        return newsModels;
+        return articleModels;
     }
 
     /**

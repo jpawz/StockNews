@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import pl.pjask.stocknews.db.DBSchema.SymbolHintTable;
 
+import static pl.pjask.stocknews.db.DBSchema.ArticlesTable;
 import static pl.pjask.stocknews.db.DBSchema.MenuTable;
-import static pl.pjask.stocknews.db.DBSchema.NewsTable;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final int VERSION = 1;
@@ -40,13 +40,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 ")"
         );
 
-        db.execSQL("create table " + NewsTable.NAME + "(" +
-                NewsTable.Cols.ID + " INTEGER PRIMARY KEY," +
-                NewsTable.Cols.MENU_ID + " INTEGER REFERENCES " + MenuTable.NAME + ", " +
-                NewsTable.Cols.SYMBOL + " TEXT," +
-                NewsTable.Cols.TITLE + " TEXT NOT NULL UNIQUE," +
-                NewsTable.Cols.URL + " TEXT, " +
-                NewsTable.Cols.VISITED + " INTEGER" +
+        db.execSQL("create table " + ArticlesTable.NAME + "(" +
+                ArticlesTable.Cols.ID + " INTEGER PRIMARY KEY," +
+                ArticlesTable.Cols.MENU_ID + " INTEGER REFERENCES " + MenuTable.NAME + ", " +
+                ArticlesTable.Cols.SYMBOL + " TEXT," +
+                ArticlesTable.Cols.TITLE + " TEXT NOT NULL UNIQUE," +
+                ArticlesTable.Cols.DATE + " TEXT," +
+                ArticlesTable.Cols.URL + " TEXT, " +
+                ArticlesTable.Cols.VISITED + " INTEGER" +
                 ")");
 
         db.execSQL("create table " + SymbolHintTable.NAME + "(" +
@@ -61,7 +62,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion != newVersion) {
             db.execSQL("DROP TABLE IF EXISTS " + MenuTable.NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + NewsTable.NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + ArticlesTable.NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + SymbolHintTable.NAME);
             onConfigure(db);
         }
     }

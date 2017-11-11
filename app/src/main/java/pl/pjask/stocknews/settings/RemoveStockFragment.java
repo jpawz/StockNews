@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.pjask.stocknews.R;
-import pl.pjask.stocknews.utils.Menu;
+import pl.pjask.stocknews.utils.MenuUtils;
 
 public class RemoveStockFragment extends DialogFragment {
 
@@ -23,7 +23,7 @@ public class RemoveStockFragment extends DialogFragment {
     private List<String> items;
     private boolean[] itemsCheckStatus;
 
-    private Menu menu;
+    private MenuUtils mMenuUtils;
     private ArrayAdapter<String> itemsAdapter;
 
 
@@ -33,7 +33,7 @@ public class RemoveStockFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        menu = Menu.getInstance(getContext());
+        mMenuUtils = MenuUtils.getInstance(getContext());
 
 
         View view = inflater.inflate(R.layout.fragment_remove_stock, container, false);
@@ -54,7 +54,7 @@ public class RemoveStockFragment extends DialogFragment {
     }
 
     private void prepareListViewData() {
-        List<String> menuItems = menu.getSymbolNames();
+        List<String> menuItems = mMenuUtils.getSymbolNames();
         items = new ArrayList<>(menuItems);
         itemsCheckStatus = new boolean[items.size()];
         itemsAdapter.addAll(menuItems);
@@ -66,7 +66,7 @@ public class RemoveStockFragment extends DialogFragment {
                 int numberOfItems = items.size();
                 for (int i = 0; i < numberOfItems; i++) {
                     if (itemsCheckStatus[i]) {
-                        menu.removeSymbol(items.get(i));
+                        mMenuUtils.removeSymbol(items.get(i));
                     }
                 }
                 itemsAdapter.clear();

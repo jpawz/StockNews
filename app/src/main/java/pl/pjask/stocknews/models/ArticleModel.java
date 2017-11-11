@@ -1,13 +1,14 @@
 package pl.pjask.stocknews.models;
 
-public class NewsModel {
+public class ArticleModel {
 
     private final String title;
     private String stockSymbol;
     private String url;
     private boolean visited;
+    private String date;
 
-    public NewsModel(String title) {
+    public ArticleModel(String title) {
         this.title = title;
     }
 
@@ -39,4 +40,11 @@ public class NewsModel {
         return title;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }
