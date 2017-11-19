@@ -62,7 +62,8 @@ public class ArticlesProvider {
                 ArticlesTable.Cols.TITLE,
                 ArticlesTable.Cols.SYMBOL,
                 ArticlesTable.Cols.URL,
-                ArticlesTable.Cols.DATE};
+                ArticlesTable.Cols.DATE,
+                ArticlesTable.Cols.VISITED};
         String questionMarks = (new String(new char[stockSymbols.size()]).replace("\0", "?, "));
         questionMarks = questionMarks.substring(0, questionMarks.length() - 2);
         String selection = ArticlesTable.Cols.SYMBOL + " IN (" + questionMarks + ")";

@@ -2,6 +2,7 @@ package pl.pjask.stocknews;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,10 +17,11 @@ public class ArticlesListAdapter extends RecyclerView.Adapter<ArticlesListAdapte
     private final CursorAdapter mCursorAdapter;
     private final Context mContext;
 
+
     public ArticlesListAdapter(Context context, Cursor cursor) {
         mContext = context;
 
-        mCursorAdapter = new NewsCursorAdapter(context, cursor);
+        mCursorAdapter = new ArticlesCursorAdapter(context, cursor);
     }
 
     @Override
@@ -40,6 +42,16 @@ public class ArticlesListAdapter extends RecyclerView.Adapter<ArticlesListAdapte
         return mCursorAdapter.getCount();
     }
 
+    @Override
+    public void setHasStableIds(boolean hasStableIds) {
+        super.setHasStableIds(true);
+    }
+
+    @Override
+    public void registerAdapterDataObserver(RecyclerView.AdapterDataObserver observer) {
+        super.registerAdapterDataObserver(observer);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         final View newsView;
@@ -53,8 +65,8 @@ public class ArticlesListAdapter extends RecyclerView.Adapter<ArticlesListAdapte
 
     }
 
-    private class NewsCursorAdapter extends CursorAdapter {
-        public NewsCursorAdapter(Context context, Cursor cursor) {
+    private class ArticlesCursorAdapter extends CursorAdapter {
+        public ArticlesCursorAdapter(Context context, Cursor cursor) {
             super(context, cursor, 0);
         }
 
@@ -66,9 +78,20 @@ public class ArticlesListAdapter extends RecyclerView.Adapter<ArticlesListAdapte
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             TextView itemTitle = view.findViewById(R.id.item_title);
-
             String title = cursor.getString(cursor.getColumnIndexOrThrow(DBSchema.ArticlesTable.Cols.TITLE));
             itemTitle.setText(title);
+            if (cursor.getInt(cursor.getColumnIndexOrThrow(DBSchema.ArticlesTable.Cols.VISITED)) == 0) {
+                itemTitle.setTypeface(null, Typeface.BOLD);
+            }
+
+            TextView itemDate = view.findViewById(R.id.item_date);
+            String date = cursor.getString(cursor.getColumnIndexOrThrow(DBSchema.ArticlesTable.Cols.DATE));
+            itemDate.setText(date);
+
+            TextView stockName = view.findViewById(R.id.stock_name);
+            String symbol = cursor.getString(cursor.getColumnIndexOrThrow(DBSchema.ArticlesTable.Cols.SYMBOL));
+            stockName.setText(symbol);
         }
+
     }
 }

@@ -57,18 +57,19 @@ public class BankierParser {
 
         Document document = Jsoup.connect(BANKIER_NEWS_URL_TEMPLATE + symbol.getStockSymbol()).get();
         Elements boxes = document.getElementsByClass(NEWS_CLASS);
-        Element newsElement = boxes.get(boxNumber);
-        Elements newsElements = newsElement.getElementsByTag("li");
-        Elements urlElements = newsElement.getElementsByTag("a");
-        Elements dateElements = newsElement.getElementsByTag("time");
+        Element articleElement = boxes.get(boxNumber);
+        Elements newsElements = articleElement.getElementsByTag("li");
+        Elements urlElements = articleElement.getElementsByTag("a");
+        Elements dateElements = articleElement.getElementsByTag("time");
 
-        ArticleModel news;
+        int titleBeginIndex = 11;
+        ArticleModel model;
         for (int i = 0; i < newsElements.size(); i++) {
-            news = new ArticleModel(newsElements.get(i).text());
-            news.setStockSymbol(symbol.getStockSymbol());
-            news.setUrl("http://www.bankier.pl" + urlElements.get(i).attr("href"));
-            news.setDate(dateElements.get(i).attr("datetime"));
-            articleModels.add(news);
+            model = new ArticleModel(newsElements.get(i).text().substring(titleBeginIndex));
+            model.setStockSymbol(symbol.getStockSymbol());
+            model.setUrl("http://www.bankier.pl" + urlElements.get(i).attr("href"));
+            model.setDate(dateElements.get(i).attr("datetime"));
+            articleModels.add(model);
         }
         return articleModels;
     }
