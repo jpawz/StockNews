@@ -1,8 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <Preference
-        android:key="update_symbols_button"
-        android:title="@string/symbols_update_title"
-        />
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:tools="http://schemas.android.com/tools">
+    <PreferenceCategory
+        android:title="@string/update_symbols">
+
+        <Preference
+            android:key="@string/update_symbols_button"
+            android:summary="@string/symbols_update_summary"
+            android:title="@string/symbols_update_title"
+            tools:title="@string/symbols_update_title"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:disableDependentsState="false"
+            android:key="@string/auto_update_key"
+            android:title="@string/auto_update_title"/>
+        <ListPreference
+            android:defaultValue="7"
+            android:dependency="auto_update"
+            android:entries="@array/interval"
+            android:entryValues="@array/interval_value"
+            android:key="@string/update_interval_key"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="%s"
+            android:title="@string/update_interval_title"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/import_export">
+
+        <Preference
+            android:key="@string/import_prefs_button"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/import_prefs"/>
+        <Preference
+            android:key="@string/export_prefs_button"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/esport_prefs"/>
+    </PreferenceCategory>
 
 </PreferenceScreen>

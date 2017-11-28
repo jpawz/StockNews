@@ -7,10 +7,35 @@
     <string name="symbol">symbol</string>
     <string name="add_symbol">Add</string>
     <string name="my_stocks_title">My stocks:</string>
+
     <string name="remove_selected_stocks_title">Remove</string>
-    <string name="symbols_update_title">Update symbols</string>
+
     <string name="fetch_news">Fetch news</string>
     <string name="fetch_espi">Fetch espi</string>
+
     <string name="refresh">Refresh</string>
+
     <string name="all_stocks">All symbols</string>
+
+    <!--Preferences:-->
+    <string name="update_symbols">Update symbols</string>
+
+    <string name="symbols_update_title">Update symbols</string>
+    <string name="symbols_update_summary">Tap to update symbols now.</string>
+    <string name="update_symbols_button">update_symbols_button</string>
+
+    <string name="auto_update_title">Update automatically</string>
+    <string name="auto_update_key">auto_update</string>
+
+    <string name="update_interval_title">Update interval</string>
+    <string name="update_interval_key">update_interval_key</string>
+    <string name="last_update_date">last_update_date</string>
+
+    <string name="import_export">Import / Export</string>
+
+    <string name="import_prefs">Import preferences…</string>
+    <string name="import_prefs_button">import_prefs_button</string>
+
+    <string name="esport_prefs">Export preferences…</string>
+    <string name="export_prefs_button">export_prefs_button</string>
 </resources>

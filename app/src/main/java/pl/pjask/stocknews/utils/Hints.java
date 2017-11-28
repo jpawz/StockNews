@@ -2,17 +2,22 @@ package pl.pjask.stocknews.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
+import pl.pjask.stocknews.R;
 import pl.pjask.stocknews.db.DBHelper;
 import pl.pjask.stocknews.db.DBSchema.SymbolHintTable;
 import pl.pjask.stocknews.models.Stock;
+
 
 /**
  * Serves as utility class delivering hints for AutocompleteTextView with AddStockFragment.
@@ -20,8 +25,10 @@ import pl.pjask.stocknews.models.Stock;
 public class Hints {
     private static Hints hints;
     private final SQLiteDatabase mDatabase;
+    private final Context mContext;
 
     private Hints(Context context) {
+        mContext = context;
         mDatabase = DBHelper.getInstance(context)
                 .getWritableDatabase();
     }
@@ -40,6 +47,11 @@ public class Hints {
             ContentValues values = getContentValues(stock);
             mDatabase.insert(SymbolHintTable.NAME, null, values);
         }
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        preferences.edit()
+                .putLong(mContext.getString(R.string.last_update_date), (new Date()).getTime())
+                .apply();
     }
 
     private void clearTable() {
@@ -81,7 +93,7 @@ public class Hints {
         (new UpdateSymbolsTask()).execute();
     }
 
-    private class UpdateSymbolsTask extends AsyncTask<Void, Void, Boolean> {
+    private static class UpdateSymbolsTask extends AsyncTask<Void, Void, Boolean> {
         private Set<Stock> updatedSymbols;
 
         @Override

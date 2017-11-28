@@ -1,6 +1,7 @@
 package pl.pjask.stocknews;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -9,12 +10,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.SubMenu;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import pl.pjask.stocknews.models.Stock;
@@ -35,12 +40,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
         setUpToolbar();
 
         mDrawer = findViewById(R.id.drawer_layout);
 
-        Hints hints = Hints.getInstance(this);
-        hints.updateSymbolList();
+        updateSymbols();
 
         mMenuUtils = MenuUtils.getInstance(this);
         mMenuUtils.setMenuChangeListener(this::prepareNavigationDrawer);
@@ -49,6 +55,27 @@ public class MainActivity extends AppCompatActivity {
         prepareNavigationDrawer();
 
         prepareRootLayout();
+    }
+
+    private void updateSymbols() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        boolean autoupdate = preferences.getBoolean(getString(R.string.auto_update_key), false);
+
+        if (!autoupdate) {
+            return;
+        }
+
+        int interval = preferences.getInt(getString(R.string.update_interval_key), 0);
+        Date lastUpdate = new Date(preferences.getLong(getString(R.string.last_update_date), (new Date()).getTime()));
+        Date nextUpdate = DateUtils.addDays(lastUpdate, interval);
+
+        if (nextUpdate.after(new Date())) {
+            Hints hints = Hints.getInstance(this);
+            hints.updateSymbolList();
+        }
+
+
     }
 
     private void setUpToolbar() {
