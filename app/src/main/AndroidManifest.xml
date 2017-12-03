@@ -3,6 +3,8 @@
           package="pl.pjask.stocknews">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -14,7 +16,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.Base">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -24,10 +26,13 @@
 
         <activity
             android:name=".settings.ManageActivity"
-            android:label="@string/manage_news"/>
+            android:label="@string/manage_news"
+            />
         <activity
             android:name=".settings.SettingsActivity"
-            android:label="@string/settings"/>
+            android:label="@string/settings"
+            android:theme="@style/Theme.Settings"
+            />
     </application>
 
 </manifest>

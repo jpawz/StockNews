@@ -1,14 +1,21 @@
 package pl.pjask.stocknews.settings;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.obsez.android.lib.filechooser.ChooserDialog;
+import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
+
+import java.io.IOException;
+
 import pl.pjask.stocknews.R;
+import pl.pjask.stocknews.db.DBHelper;
 import pl.pjask.stocknews.utils.Hints;
 
 
@@ -40,19 +47,46 @@ public class SettingsActivity extends AppCompatActivity {
             Preference importPrefs = findPreference(getString(R.string.import_prefs_button));
             importPrefs.setOnPreferenceClickListener(this::importPrefs);
 
-            Preference esportPrefs = findPreference(getString(R.string.export_prefs_button));
-            esportPrefs.setOnPreferenceClickListener(this::esportPrefs);
+            Preference exportPrefs = findPreference(getString(R.string.export_prefs_button));
+            exportPrefs.setOnPreferenceClickListener(this::exportPrefs);
         }
 
-        private boolean esportPrefs(Preference preference) {
-            Toast.makeText(getContext(), "not yet implemented", Toast.LENGTH_SHORT).show();
-            return false;
+        private boolean exportPrefs(Preference preference) {
+
+            new ChooserDialog().with(getContext())
+                    .withFilter(true, false)
+                    .withStartFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath())
+                    .withResources(R.string.title_choose_dir, R.string.dialog_ok, R.string.dialog_cancel)
+                    .withChosenListener((path, pathFile) -> {
+                        try {
+                            DBHelper.getInstance(getContext()).exportDatabase(path);
+                            Toast.makeText(getContext(), "Exported to " + path, Toast.LENGTH_SHORT).show();
+                        } catch (IOException e) {
+                            Log.e("Settings", e.getMessage());
+                        }
+                    })
+                    .build()
+                    .show();
+            return true;
         }
 
         private boolean importPrefs(Preference preference) {
-            Toast.makeText(getContext(), "not yet implemented", Toast.LENGTH_SHORT).show();
-            return false;
+            new ChooserDialog().with(getContext())
+                    .withFilter(false, false, "db")
+                    .withStartFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath())
+                    .withChosenListener((path, pathFile) -> {
+                        try {
+                            DBHelper.getInstance(getContext()).importDatabase(path);
+                            Toast.makeText(getContext(), "Imported", Toast.LENGTH_SHORT).show();
+                        } catch (IOException e) {
+                            Log.e("Settings", e.getMessage());
+                        }
+                    })
+                    .build()
+                    .show();
+            return true;
         }
+
 
         private boolean updateSymbols(Preference preference) {
             Hints.getInstance(getContext()).updateSymbolList();
@@ -60,9 +94,11 @@ public class SettingsActivity extends AppCompatActivity {
             return false;
         }
 
+
         @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            addPreferencesFromResource(R.xml.preferences);
+        public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.preferences, rootKey);
+
         }
     }
 }

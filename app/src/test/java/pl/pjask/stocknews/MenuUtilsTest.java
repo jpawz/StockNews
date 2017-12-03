@@ -2,6 +2,7 @@ package pl.pjask.stocknews;
 
 import android.content.Context;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +26,10 @@ public class MenuUtilsTest {
     public void setup() {
         context = RuntimeEnvironment.application;
         mMenuUtils = MenuUtils.getInstance(context);
+    }
+
+    @After
+    public void tearDown() throws Exception {
     }
 
     @Test

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="interval">
+        <item>1 day</item>
+        <item>1 week</item>
+        <item>1 month</item>
+    </string-array>
+    <string-array name="interval_value">
+        <item>1</item>
+        <item>7</item>
+        <item>30</item>
+    </string-array>
+</resources>

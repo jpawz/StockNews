@@ -16,11 +16,12 @@ import pl.pjask.stocknews.models.Stock;
 
 public class MenuUtils {
     private static MenuUtils menuUtils;
-    private final SQLiteDatabase mDatabase;
+    private final Context mContext;
+    private SQLiteDatabase mDatabase;
     private MenuChangeListener mMenuChangeListener;
-
     private MenuUtils(Context context) {
-        mDatabase = DBHelper.getInstance(context)
+        mContext = context;
+        mDatabase = DBHelper.getInstance(mContext)
                 .getWritableDatabase();
     }
 
@@ -91,6 +92,10 @@ public class MenuUtils {
     }
 
     private StockCursorWrapper queryStocks() {
+        if (!mDatabase.isOpen()) {
+            mDatabase = DBHelper.getInstance(mContext)
+                    .getWritableDatabase();
+        }
         Cursor cursor = mDatabase.query(
                 MenuTable.NAME,
                 new String[]{MenuTable.Cols.SYMBOL_NAME,
@@ -114,6 +119,13 @@ public class MenuUtils {
 
         return values;
     }
+
+    public void close() {
+        if (mDatabase != null) {
+            mDatabase.close();
+        }
+    }
+
 
     public interface MenuChangeListener {
         void onMenuChanged();

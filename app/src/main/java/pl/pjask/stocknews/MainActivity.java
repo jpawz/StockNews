@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        int interval = preferences.getInt(getString(R.string.update_interval_key), 0);
+        int interval = Integer.parseInt(preferences.getString(getString(R.string.update_interval_key), "0"));
         Date lastUpdate = new Date(preferences.getLong(getString(R.string.last_update_date), (new Date()).getTime()));
         Date nextUpdate = DateUtils.addDays(lastUpdate, interval);
 
