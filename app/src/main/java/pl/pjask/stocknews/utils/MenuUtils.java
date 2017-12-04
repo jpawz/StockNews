@@ -19,10 +19,10 @@ public class MenuUtils {
     private final Context mContext;
     private SQLiteDatabase mDatabase;
     private MenuChangeListener mMenuChangeListener;
+
     private MenuUtils(Context context) {
         mContext = context;
-        mDatabase = DBHelper.getInstance(mContext)
-                .getWritableDatabase();
+        openDb();
     }
 
     public static synchronized MenuUtils getInstance(Context context) {
@@ -38,6 +38,7 @@ public class MenuUtils {
 
     public void addSymbol(Stock symbol) {
         ContentValues values = getContentValues(symbol);
+        openDb();
         mDatabase.insertWithOnConflict(MenuTable.NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         if (mMenuChangeListener != null) {
             mMenuChangeListener.onMenuChanged();
@@ -45,6 +46,7 @@ public class MenuUtils {
     }
 
     public void removeSymbol(String symbolName) {
+        openDb();
         mDatabase.execSQL("DELETE FROM " + MenuTable.NAME +
                 " WHERE " + MenuTable.Cols.SYMBOL_NAME + " = '" + symbolName + "'");
         if (mMenuChangeListener != null) {
@@ -66,6 +68,7 @@ public class MenuUtils {
     }
 
     public Stock getStock(String symbol) {
+        openDb();
         Cursor cursor = mDatabase.query(
                 MenuTable.NAME,
                 new String[]{MenuTable.Cols.SYMBOL_NAME,
@@ -92,10 +95,7 @@ public class MenuUtils {
     }
 
     private StockCursorWrapper queryStocks() {
-        if (!mDatabase.isOpen()) {
-            mDatabase = DBHelper.getInstance(mContext)
-                    .getWritableDatabase();
-        }
+        openDb();
         Cursor cursor = mDatabase.query(
                 MenuTable.NAME,
                 new String[]{MenuTable.Cols.SYMBOL_NAME,
@@ -111,6 +111,7 @@ public class MenuUtils {
         return new StockCursorWrapper(cursor);
     }
 
+
     private ContentValues getContentValues(Stock symbol) {
         ContentValues values = new ContentValues();
         values.put(MenuTable.Cols.SYMBOL_NAME, symbol.getStockSymbol());
@@ -118,6 +119,13 @@ public class MenuUtils {
         values.put(MenuTable.Cols.FETCH_ESPI, symbol.fetchEspi() ? 1 : 0);
 
         return values;
+    }
+
+    private void openDb() {
+        if (mDatabase == null || !mDatabase.isOpen()) {
+            mDatabase = DBHelper.getInstance(mContext)
+                    .getWritableDatabase();
+        }
     }
 
     public void close() {

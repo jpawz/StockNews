@@ -20,12 +20,13 @@ import static pl.pjask.stocknews.db.DBSchema.ArticlesTable;
 
 public class ArticlesProvider {
     private static ArticlesProvider mArticlesProvider;
-    private final SQLiteDatabase db;
+    private final Context mContext;
+    private SQLiteDatabase db;
     private DataChangeListener mDataChangeListener;
 
     private ArticlesProvider(Context context) {
-        db = DBHelper.getInstance(context)
-                .getWritableDatabase();
+        mContext = context;
+        openDb();
     }
 
     public static synchronized ArticlesProvider getInstance(Context context) {
@@ -46,6 +47,7 @@ public class ArticlesProvider {
      */
     private void addNews(ArticleModel articleModel) {
         ContentValues values = getContentValues(articleModel);
+        openDb();
         db.insertWithOnConflict(ArticlesTable.NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
 
@@ -70,6 +72,7 @@ public class ArticlesProvider {
         String[] selectionArgs = stockSymbols.toArray(new String[0]);
         String orderBy = ArticlesTable.Cols.DATE + " DESC";
 
+        openDb();
         return db.query(
                 tableName,
                 columns,
@@ -80,6 +83,7 @@ public class ArticlesProvider {
                 orderBy
         );
     }
+
 
     /**
      * Updates articles from website. Inserts data to database.
@@ -99,6 +103,12 @@ public class ArticlesProvider {
         values.put(ArticlesTable.Cols.DATE, articleModel.getDate());
 
         return values;
+    }
+
+    private void openDb() {
+        if (db == null || !db.isOpen()) {
+            db = DBHelper.getInstance(mContext).getWritableDatabase();
+        }
     }
 
     public interface DataChangeListener {
